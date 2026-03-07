@@ -58,26 +58,30 @@
             <li><a href="https://github.com/dimitris-ebra" target="_blank"><i class="bi bi-github"></i> GitHub</a></li>
          </ul>
 
-         <!-- Hamburger Button -->
-         <button id="menu-btn" class="md:hidden text-2xl focus:outline-none">
-            <i id="menu-icon" class="bi bi-list"></i>
-         </button>
-         <ul id="mobile-nav"
-            class="hidden absolute top-full left-0 w-full bg-[var(--surface)] flex-col items-center space-y-4 p-6 font-medium shadow-lg md:hidden">
-            <li><a href="#about" class="block w-full text-center">About</a></li>
-            <li><a href="#projects" class="block w-full text-center">Projects</a></li>
-            <li><a href="#contact" class="block w-full text-center">Contact</a></li>
-            <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank"><i class="bi bi-linkedin"></i>
-                  LinkedIn</a></li>
-            <li><a href="https://github.com/dimitris-ebra" target="_blank"><i class="bi bi-github"></i> GitHub</a></li>
-
-         </ul>
-         <div id="work-status" class="unavailable">
-            <span id="status-dot" class="status-dot"></span>
-            <span id="status-text">Checking...</span>
+         <!-- Right-side controls -->
+         <div class="flex items-center gap-3">
+           <div id="work-status" class="unavailable hidden sm:inline-flex">
+              <span id="status-dot" class="status-dot"></span>
+              <span id="status-text">Checking...</span>
+           </div>
+           <button id="themeSwitch" class="theme-toggle-btn" title="Toggle light/dark mode">
+              <i class="bi bi-moon-stars-fill"></i>
+           </button>
+           <!-- Hamburger Button -->
+           <button id="menu-btn" class="md:hidden text-2xl focus:outline-none">
+              <i id="menu-icon" class="bi bi-list"></i>
+           </button>
          </div>
-         <button id="themeSwitch" class="theme-toggle-btn" title="Toggle light/dark mode"><i
-               class="bi bi-moon-stars-fill"></i></button>
+
+         <ul id="mobile-nav"
+           class="hidden absolute top-full left-0 w-full bg-[var(--surface)] flex-col items-center space-y-4 p-6 font-medium shadow-lg md:hidden">
+           <li><a href="#about" class="block w-full text-center">About</a></li>
+           <li><a href="#projects" class="block w-full text-center">Projects</a></li>
+           <li><a href="#contact" class="block w-full text-center">Contact</a></li>
+           <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank"><i class="bi bi-linkedin"></i>
+                 LinkedIn</a></li>
+           <li><a href="https://github.com/dimitris-ebra" target="_blank"><i class="bi bi-github"></i> GitHub</a></li>
+         </ul>
 
 
 
