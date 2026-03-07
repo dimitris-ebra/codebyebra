@@ -330,77 +330,8 @@
                   </div>
                </div>
             </div>
-
-
 </div>
-            <div class="project-card">
-               <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8 items-start card">
-            <div class="lg:col-span-1 w-full">
-               <div class="project-image-container">
-                  <img
-                     src="https://cdn.vectorstock.com/i/1000v/68/75/fingerprint-in-padlock-cyber-security-technology-vector-42326875.avif"
-                     alt="Secure password concept illustration" class="project-image" loading="lazy" />
-               </div>
-            </div>
-            <!-- Project Info -->
-            <div class="lg:col-span-2">
-               <h3 class="text-2xl font-bold mb-4">
-                  <a href="#" class="project-link">LibreLock</a> — My First Secure Password Manager
-               </h3>
 
-               <!-- Brief Description -->
-               <div class="project-brief">
-                  <p class="mb-4">
-                     <strong>LibreLock</strong> is a lightweight, secure, and open-source password manager
-                     built for the extra paranoid. It stores your credentials encrypted with
-                     <strong>Argon2id + Fernet</strong>, and keeps sensitive data safe even if
-                     someone gets access to the database file.
-                  </p>
-
-                  <p class="mb-6">
-                     Developed with <strong>Python, SQLite, and CustomTkinter</strong> for the UI, it features
-                     password storage, retrieval, secure copy-to-clipboard, editing, and deletion,
-                     plus notes and URL management for every service. All encryption keys are derived from
-                     the master password; without it, the data is practically impossible to decrypt.
-                  </p>
-               </div>
-
-               <!-- Detailed Content (Initially Hidden) -->
-               <div id="project-details-2" class="project-details hidden">
-                  <p class="mb-6">
-                     Full disclosure: this is my first proper program, coded fueled by
-                     <em>lots of coffee, too many cigarettes, a lot of googling, and asking ChatGPT</em>.
-                     I have zero design skills, so the UI is as functional and clean as ChatGPT could make it.
-                     The app supports adding notes, URLs, and safe copy-to-clipboard functionality.
-                  </p>
-
-                  <h4 class="mb-4 text-xl font-semibold">Technical Details</h4>
-
-                  <ul class="list-disc pl-6 mb-6">
-                     <li>Passwords, usernames, emails, URLs, and notes are encrypted using Fernet (AES 128 in CBC mode with HMAC) with keys derived from Argon2id.</li>
-                     <li>Each password entry has its own encryption salt; master password changes re-encrypt all stored data safely.</li>
-                     <li>Search tags for services are hashed with HMAC-SHA256, so even service names are not stored in plaintext.</li>
-                     <li>Safe copy-to-clipboard clears itself after 30 seconds to reduce leakage risk.</li>
-                     <li>No sensitive info is logged; logs mostly track actions like "user added a password" without revealing actual data.</li>
-                  </ul>
-
-                  <div class="bg-gray-800 text-gray-200 p-6 rounded-xl shadow-md mb-6">
-                     <p class="italic">
-                        “First fully working app! If it crashes, blame my caffeine intake, not my code.”
-                     </p>
-                  </div>
-               </div>
-
-               <!-- Action Buttons -->
-               <div class="flex flex-wrap gap-3 items-center">
-                  <a href="https://github.com/dimitris-ebra/LibreLock-PasswordManager" target="_blank" class="btn btn-w">View on GitHub</a>
-                  <button onclick="toggleProjectDetails('project-details-2', this)" class="view-more-btn">
-                     View More
-                  </button>
-               </div>
-                  </div>
-                  </div>
-            </div>
          
   
          </div>
