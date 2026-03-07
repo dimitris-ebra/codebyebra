@@ -339,6 +339,25 @@ body.light-theme #work-status {
 }
 
 /* ===== Project Component Styles ===== */
+.project-tag {
+   display: inline-block;
+   padding: 0.25rem 0.75rem;
+   font-size: 0.75rem;
+   font-weight: 600;
+   border-radius: 9999px;
+   background: var(--accent-glow, rgba(168, 85, 247, 0.15));
+   color: var(--accent1);
+   border: 1px solid var(--accent1);
+   transition: all 0.3s ease;
+}
+
+.project-tag:hover {
+   background: var(--accent1);
+   color: #fff;
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px var(--accent-glow, rgba(168, 85, 247, 0.3));
+}
+
 .project-card {
    margin-bottom: 2rem;
 }
