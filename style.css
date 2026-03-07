@@ -1,21 +1,30 @@
-/* Root color scheme (dark mode) */
+/* ===== Root color scheme (dark mode — default) ===== */
 :root {
-   --background: #0e0e10;
-   --surface: #1a1a1d;
-   --text: #f5f5f7;
-   --border: #2a2a2d;
-
-   --accent1: #2563eb;
-   /* purple-blue */
-   --accent2: #06b6d4;
-   /* pink */
-
-   --gradient-hero: linear-gradient(135deg, var(--accent1), var(--accent2));
+   --background: #0a0a0f;
+   --surface: #141420;
+   --text: #f0f0f5;
+   --muted: #8888aa;
+   --border: #2a2a3d;
+   --accent1: #a855f7;
+   --accent2: #ec4899;
+   --accent-glow: rgba(168, 85, 247, 0.3);
+   --gradient-hero: linear-gradient(135deg, #a855f7, #ec4899);
 }
 
+/* ===== Light theme overrides ===== */
+body.light-theme {
+   --background: #fafafe;
+   --surface: #ffffff;
+   --text: #1a1a2e;
+   --muted: #6b7280;
+   --border: #e5e7eb;
+   --accent1: #9333ea;
+   --accent2: #db2777;
+   --accent-glow: rgba(147, 51, 234, 0.2);
+   --gradient-hero: linear-gradient(135deg, #9333ea, #db2777);
+}
 
-
-/* Firefox */
+/* ===== Scrollbar — Firefox ===== */
 * {
    scrollbar-width: thin;
    scrollbar-color: var(--accent1) var(--surface);
@@ -25,17 +34,58 @@ html {
    scroll-behavior: smooth;
 }
 
-/* Base theme */
+/* ===== Base body ===== */
 body {
    background: var(--background);
    color: var(--text);
+   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Navbar */
+/* ===== Theme toggle button ===== */
+.theme-toggle-btn {
+   position: fixed;
+   top: 1rem;
+   right: 5rem;
+   z-index: 9999;
+   width: 44px;
+   height: 44px;
+   border-radius: 50%;
+   border: 1px solid var(--border);
+   background: rgba(255, 255, 255, 0.08);
+   backdrop-filter: blur(12px);
+   -webkit-backdrop-filter: blur(12px);
+   color: var(--text);
+   font-size: 1.25rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+   box-shadow: 0 2px 12px var(--accent-glow);
+}
+
+.theme-toggle-btn:hover {
+   background: var(--accent-glow);
+   border-color: var(--accent1);
+   transform: scale(1.1);
+   box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+body.light-theme .theme-toggle-btn {
+   background: rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Navbar — glassmorphism ===== */
 header {
-   background: rgba(14, 14, 16, 0.7);
-   backdrop-filter: blur(10px);
+   background: rgba(10, 10, 15, 0.65);
+   backdrop-filter: blur(14px);
+   -webkit-backdrop-filter: blur(14px);
    border-bottom: 1px solid var(--border);
+   transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+body.light-theme header {
+   background: rgba(250, 250, 254, 0.7);
 }
 
 .nav-brand {
@@ -59,6 +109,7 @@ nav li a {
    position: relative;
    display: inline-block;
    padding-bottom: 2px;
+   transition: color 0.3s ease;
 }
 
 nav li a::after {
@@ -68,7 +119,7 @@ nav li a::after {
    bottom: 0;
    height: 2px;
    width: 0;
-   background: white;
+   background: var(--accent1);
    transition: width 0.3s ease-in-out;
 }
 
@@ -76,7 +127,7 @@ nav li a:hover::after {
    width: 100%;
 }
 
-/* Hero Section with parallax gradient */
+/* ===== Hero Section with parallax gradient ===== */
 .hero {
    min-height: 100vh;
    background: var(--gradient-hero);
@@ -85,7 +136,7 @@ nav li a:hover::after {
    background-position: center;
 }
 
-/* Sections */
+/* ===== Sections ===== */
 .section-title {
    text-align: center;
    font-size: 2rem;
@@ -93,20 +144,20 @@ nav li a:hover::after {
    margin-bottom: 2rem;
 }
 
-/* Cards */
+/* ===== Cards ===== */
 .card {
    background: var(--surface);
    padding: 2rem;
    border-radius: 1rem;
    border: 1px solid var(--border);
-   transition: transform 0.3s ease;
+   transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
 .card:hover {
    transform: translateY(-5px);
 }
 
-/* Inputs & Buttons */
+/* ===== Inputs & Buttons ===== */
 .input {
    width: 100%;
    background: var(--surface);
@@ -114,6 +165,13 @@ nav li a:hover::after {
    padding: 0.75rem;
    border-radius: 0.5rem;
    color: var(--text);
+   transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.input:focus {
+   border-color: var(--accent1);
+   outline: none;
+   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .btn {
@@ -130,7 +188,7 @@ nav li a:hover::after {
 .btn:hover {
    opacity: 0.85;
    transform: translateY(-5px);
-   box-shadow: 0 4px 20px var(--accent1);
+   box-shadow: 0 4px 20px var(--accent-glow);
 }
 
 .view-work {
@@ -147,20 +205,19 @@ nav li a:hover::after {
 }
 
 .bi-star-fill:hover {
-
    transform: scale(1.2);
    color: #ffd700;
 }
 
+/* ===== Go-to-top button ===== */
 #goTopBtn {
    z-index: 1000;
    width: 48px;
    height: 48px;
    border-radius: 50%;
-
-   background: var(--accent1);
-   background-color: #2563eb;
+   background: var(--gradient-hero);
    transition: all 0.3s ease-in-out;
+   box-shadow: 0 2px 12px var(--accent-glow);
 }
 
 #goTopBtn.show {
@@ -176,10 +233,11 @@ nav li a:hover::after {
 }
 
 #goTopBtn:hover {
-   background: var(--accent2);
-   box-shadow: 0 0 12px var(--accent2);
+   box-shadow: 0 0 16px var(--accent2), 0 0 32px var(--accent-glow);
+   transform: translateY(-3px);
 }
 
+/* ===== Work status badge ===== */
 #work-status {
    padding: 6px 14px;
    border-radius: 30px;
@@ -196,7 +254,13 @@ nav li a:hover::after {
    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-/* Dot */
+body.light-theme #work-status {
+   background: rgba(0, 0, 0, 0.04);
+   border-color: var(--border);
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Status dot ===== */
 .status-dot {
    width: 12px;
    height: 12px;
@@ -251,6 +315,7 @@ nav li a:hover::after {
    }
 }
 
+/* ===== Project link ===== */
 .project-link {
    font-size: 1.5rem;
    font-weight: 700;
@@ -264,6 +329,7 @@ nav li a:hover::after {
    text-shadow: 0 0 12px var(--accent1), 0 0 24px var(--accent2);
 }
 
+/* ===== Tech items ===== */
 .tech-item {
    transition: all ease 0.3s;
 }
@@ -272,7 +338,7 @@ nav li a:hover::after {
    transform: scale(1.2);
 }
 
-/* Project Component Styles */
+/* ===== Project Component Styles ===== */
 .project-card {
    margin-bottom: 2rem;
 }
@@ -342,7 +408,7 @@ nav li a:hover::after {
    transform: rotate(180deg);
 }
 
-/* Responsive adjustments for project layout */
+/* ===== Responsive adjustments for project layout ===== */
 @media (min-width: 1024px) {
    .project-image-container {
       height: 320px;
@@ -353,30 +419,26 @@ nav li a:hover::after {
    .project-image-container {
       height: 240px;
    }
+
+   .theme-toggle-btn {
+      top: 0.75rem;
+      right: 3.5rem;
+      width: 38px;
+      height: 38px;
+      font-size: 1rem;
+   }
 }
 
-
-/* Love theme */
-
-/* Love Theme */
+/* ===== Love Theme ===== */
 .love-theme {
    --background: #fff0f5;
-   /* Lavender blush */
    --surface: #ffe4ec;
-   /* Light pink card surface */
    --text: #4a0035;
-   /* Deep romantic wine color */
    --border: #ffb6c1;
-   /* Soft pink border */
-
    --accent1: #ff69b4;
-   /* Hot pink */
    --accent2: #ff3366;
-   /* Love red/pink */
-
+   --accent-glow: rgba(255, 105, 180, 0.3);
    --gradient-hero: linear-gradient(135deg, var(--accent1), var(--accent2));
-
-
 }
 
 .love-theme .nav-brand:hover {
@@ -455,6 +517,7 @@ nav li a:hover::after {
    color: var(--text) !important;
 }
 
+/* ===== Scrollbar — WebKit ===== */
 ::-webkit-scrollbar {
    width: 10px;
 }
@@ -472,6 +535,7 @@ nav li a:hover::after {
    background: var(--accent2);
 }
 
+/* ===== Love emoji ===== */
 .love-emoji {
    position: fixed;
    font-size: 2rem;
@@ -490,9 +554,9 @@ nav li a:hover::after {
       transform: translateY(-150px) translateX(50px) scale(1.5) rotate(20deg);
       opacity: 0;
    }
-
 }
 
+/* ===== Love modal ===== */
 .love-modal {
    animation: popIn 0.4s ease;
 }
@@ -509,23 +573,15 @@ nav li a:hover::after {
    }
 }
 
-/* Hacker theme */
-
+/* ===== Hacker Theme ===== */
 .hacker-theme {
    --background: #000000;
-   /* Deep black background */
    --surface: #0a0a0a;
-   /* Dark surface */
    --text: #00ff9f;
-   /* Neon green text */
    --border: #00cc66;
-   /* Cyber green border */
-
    --accent1: #00ff00;
-   /* Matrix green */
    --accent2: #00ffcc;
-   /* Aqua neon */
-
+   --accent-glow: rgba(0, 255, 0, 0.3);
    --gradient-hero: linear-gradient(135deg, var(--accent1), var(--accent2));
 }
 
@@ -604,24 +660,7 @@ nav li a:hover::after {
    color: var(--text) !important;
 }
 
-::-webkit-scrollbar {
-   width: 10px;
-}
-
-::-webkit-scrollbar-track {
-   background: var(--surface);
-}
-
-::-webkit-scrollbar-thumb {
-   background: var(--accent1);
-   border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-   background: var(--accent2);
-}
-
-/* Hacker floating "code rain" effect */
+/* ===== Hacker floating "code rain" effect ===== */
 .hacker-emoji {
    position: fixed;
    font-size: 1.5rem;

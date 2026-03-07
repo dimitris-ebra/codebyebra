@@ -76,6 +76,7 @@
             <span id="status-dot" class="status-dot"></span>
             <span id="status-text">Checking...</span>
          </div>
+         <button id="themeSwitch" class="theme-toggle-btn" title="Toggle light/dark mode"><i class="bi bi-moon-stars-fill"></i></button>
 
 
 
@@ -89,17 +90,17 @@
       <div class="max-w-2xl px-6">
          <h1 class="text-5xl md:text-7xl font-bold mb-6" id="brand">CodeByEbra</h1>
          <p class="text-lg md:text-xl mb-8 italic btn-w" id="dev-quote"></p>
-         <a href="#projects" class="btn-w inline-block px-6 py-3 border rounded view-work">View Work</a>
+         <a href="#projects" class="btn-w inline-block px-6 py-3 border rounded view-work">View Work 👀</a>
       </div>
    </section>
 
    <!-- About Me Section -->
-   <section id="about" class="py-20 bg-gray-900 text-gray-200">
+   <section id="about" class="py-20 bg-[var(--surface)] text-[var(--text)]">
       <div class="max-w-5xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-8">About Me</h2>
+         <h2 class="section-title mb-8"><i class="bi bi-info-circle"></i> About Me</h2>
 
          <p class="mb-6 text-lg leading-relaxed">
-            I’m an <strong>18-year-old developer based in Greece</strong>, passionate about
+            I’m an <strong>18-year-old developer based in Greece 🇬🇷</strong>, passionate about
             building modern, functional, and visually engaging digital experiences.
          </p>
 
@@ -118,15 +119,15 @@
          </p>
 
          <p class="text-lg font-semibold text-accent1">
-            My goal: <em>to turn creativity and logic into impactful digital solutions.</em>
+            My goal: <em>to turn creativity and logic into impactful digital solutions. 🎯</em>
          </p>
       </div>
    </section>
 
    <!-- Active Tech Stack Section -->
-   <section id="tech" class="py-20 bg-gray-800 text-white">
+   <section id="tech" class="py-20 bg-[var(--background)] text-[var(--text)]">
       <div class="max-w-6xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-12">Active Tech Stack</h2>
+         <h2 class="section-title mb-12">⚡ Active Tech Stack</h2>
 
          <!-- Active Tech Icons Grid -->
          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
@@ -170,6 +171,11 @@
                <p class="mt-2 font-medium">C++</p>
             </div>
             <div class="flex flex-col items-center tech-item">
+               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C++"
+                  class="w-12 h-12" />
+               <p class="mt-2 font-medium">C</p>
+            </div>
+            <div class="flex flex-col items-center tech-item">
                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino"
                   class="w-12 h-12" />
                <p class="mt-2 font-medium">Arduino</p>
@@ -189,9 +195,9 @@
    </section>
 
    <!-- Past Experience Section -->
-   <section id="past-tech" class="py-20 bg-gray-900 text-gray-200">
+   <section id="past-tech" class="py-20 bg-[var(--surface)] text-[var(--text)]">
       <div class="max-w-6xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-12">Previously Worked With</h2>
+         <h2 class="section-title mb-12">📚 Previously Worked With</h2>
 
          <!-- Past Tech Icons Grid -->
          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
@@ -215,7 +221,7 @@
    <!-- Projects Section -->
    <section id="projects" class="py-20">
       <div class="max-w-6xl mx-auto px-6">
-         <h2 class="section-title">Projects</h2>
+         <h2 class="section-title">🚀 Projects</h2>
 
          <!-- Project Card Container -->
          <div class="project-card">
@@ -293,7 +299,7 @@
                      </p>
 
                      <!-- Testimonial Card -->
-                     <div class="bg-gray-800 text-gray-200 p-6 rounded-xl shadow-md mb-6">
+                     <div class="bg-[var(--background)] text-[var(--text)] p-6 rounded-xl shadow-md mb-6">
                         <p id="review-gr" class="italic">
                            “Άψογη δουλειά, επαγγελματισμός, ακριβώς όπως ζήτησα το site,
                            tailor made, on time και εξαιρετικό after sales service.”
@@ -344,7 +350,7 @@
 
 
    <section id="contact" class="py-20 max-w-6xl mx-auto px-6">
-      <h2 class="section-title">Contact</h2>
+      <h2 class="section-title">📬 Contact</h2>
       <form class="max-w-xl mx-auto space-y-6" action="https://formspree.io/f/xkgvdego" method="POST">
 
          <!-- Name -->
@@ -360,17 +366,17 @@
          <textarea name="message" placeholder="Message" class="input h-32" required></textarea>
 
          <!-- Submit -->
-         <button type="submit" class="btn btn-w">Send Message</button>
+         <button type="submit" class="btn btn-w">Send Message ✉️</button>
       </form>
    </section>
 
 
    <!-- Footer -->
    <footer class="py-8 text-center border-t border-border">
-      <p>&copy; 2025 Dimitris Ebrahim. All rights reserved.</p>
+      <p>&copy; 2025 Dimitris Ebrahim. All rights reserved. ✨</p>
       <p>Made with
          <span class="relative group inline-block">
-            <button id="themeToggle" class="text-white rounded-lg">💖</button>
+            <button id="themeToggle" class="text-white rounded-lg">💜</button>
             <span class="absolute bottom-full left-1/2 mb-2 w-max -translate-x-1/2
               rounded-lg bg-gray-800 px-2 py-1 text-sm text-white 
               opacity-0 group-hover:opacity-100 transition-opacity">

@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusText = document.getElementById("status-text");
 
   // ✅ Direct gist raw URL
-  const gistUrl = "https://gist.githubusercontent.com/NError404F/2134ebcba345065c106b393cfc3dab64/raw/status.txt";
+  const gistUrl = "https://gist.githubusercontent.com/dimitris-ebra/2134ebcba345065c106b393cfc3dab64/raw/status.txt";
 
   async function fetchStatus() {
     try {
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const originalTitle = document.title;
 
 window.addEventListener("blur", () => {
-  document.title = "💔 Come back, I miss you! 💔";
+  document.title = "💜 Come back, I miss you! 💜";
 });
 
 window.addEventListener("focus", () => {
@@ -450,4 +450,22 @@ function showHackerModal() {
   `;
   document.body.appendChild(modal);
   setTimeout(() => modal.remove(), 3000);
+}
+
+// 🌙 Dark/Light Mode Toggle
+const themeSwitch = document.getElementById("themeSwitch");
+if (themeSwitch) {
+  // Check for saved preference
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") {
+    document.body.classList.add("light-theme");
+    themeSwitch.innerHTML = "<i class='bi bi-sun-fill'></i>";
+  }
+
+  themeSwitch.addEventListener("click", () => {
+    document.body.classList.toggle("light-theme");
+    const isLight = document.body.classList.contains("light-theme");
+    themeSwitch.innerHTML = isLight ? "<i class='bi bi-sun-fill'></i>" : "<i class='bi bi-moon-stars-fill'></i>";
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  });
 }
