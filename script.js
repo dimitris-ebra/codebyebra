@@ -3,6 +3,80 @@ document.addEventListener("DOMContentLoaded", () => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  // --- Language (English / Greek) ---
+  // English copy lives in the HTML; Greek comes from translations.js. Elements
+  // opt in with data-i18n="key" (inner HTML) or data-i18n-attr="attr:key;…".
+  const translations = window.TRANSLATIONS || { en: {}, el: {} };
+  const i18nEls = document.querySelectorAll("[data-i18n]");
+  const i18nAttrEls = document.querySelectorAll("[data-i18n-attr]");
+  const langButtons = document.querySelectorAll("[data-set-lang]");
+  const metaDescription = document.querySelector('meta[name="description"]');
+  const languageListeners = [];
+  let lang = root.getAttribute("lang") === "el" ? "el" : "en";
+  let splitReady = false;
+
+  const attrPairs = (el) => el.dataset.i18nAttr.split(";").map((pair) => pair.split(":"));
+
+  // Remember the English originals before anything is translated or split
+  i18nEls.forEach((el) => {
+    translations.en[el.dataset.i18n] ??= el.innerHTML.trim();
+  });
+  i18nAttrEls.forEach((el) => {
+    attrPairs(el).forEach(([attr, key]) => (translations.en[key] ??= el.getAttribute(attr)));
+  });
+  translations.en["meta.title"] ??= document.title;
+  translations.en["meta.description"] ??= metaDescription.content;
+
+  function t(key) {
+    return translations[lang]?.[key] ?? translations.en[key] ?? key;
+  }
+
+  function applyLanguage(next) {
+    lang = next;
+    root.setAttribute("lang", lang);
+    document.title = t("meta.title");
+    metaDescription.setAttribute("content", t("meta.description"));
+
+    i18nEls.forEach((el) => {
+      el.innerHTML = t(el.dataset.i18n);
+      if (splitReady && el.classList.contains("split")) splitText(el, "words", "w");
+    });
+    i18nAttrEls.forEach((el) => {
+      attrPairs(el).forEach(([attr, key]) => el.setAttribute(attr, t(key)));
+    });
+    langButtons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.setLang === lang)));
+    languageListeners.forEach((fn) => fn());
+  }
+
+  function setLanguage(next) {
+    if (next === lang) return;
+    try {
+      localStorage.setItem("lang", next);
+    } catch (e) {}
+
+    // Keep a shared ?lang= link in step with the visitor's choice
+    const url = new URL(location.href);
+    if (url.searchParams.has("lang")) {
+      url.searchParams.set("lang", next);
+      history.replaceState(null, "", url);
+    }
+
+    if (reducedMotion) {
+      applyLanguage(next);
+      return;
+    }
+    // Fade the page out, swap the copy, fade back in
+    root.classList.add("is-switching-lang");
+    setTimeout(() => {
+      applyLanguage(next);
+      root.classList.remove("is-switching-lang");
+    }, 220);
+  }
+
+  langButtons.forEach((btn) => btn.addEventListener("click", () => setLanguage(btn.dataset.setLang)));
+  if (lang !== "en") applyLanguage(lang);
+  root.classList.add("i18n-ready");
+
   // --- Theme Toggle ---
   const themeToggle = document.getElementById("themeToggle");
   const themeColor = { light: "#f6f5f0", dark: "#0c0c0b" };
@@ -38,9 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function setMenu(open) {
     mobileMenu.hidden = !open;
     menuToggle.setAttribute("aria-expanded", String(open));
-    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    menuToggle.setAttribute("aria-label", t(open ? "menu.close" : "menu.open"));
   }
 
+  setMenu(false);
+  languageListeners.push(() => setMenu(!mobileMenu.hidden));
   menuToggle.addEventListener("click", () => setMenu(mobileMenu.hidden));
   mobileMenu.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => setMenu(false));
@@ -95,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".split").forEach((el) => splitText(el, "words", "w"));
   document.querySelectorAll(".split-chars").forEach((el) => splitText(el, "chars", "c"));
   document.querySelectorAll(".testimonial blockquote p").forEach((el) => splitText(el, "words", "tw"));
+  splitReady = true;
 
   // Index children for staggered reveals
   document.querySelectorAll(".stagger, .hero-meta, .showcase-modules").forEach((group) => {
@@ -304,25 +381,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const quoteEl = document.querySelector('[data-quote="el"]');
   const quoteEn = document.querySelector('[data-quote="en"]');
 
-  translateToggle.addEventListener("click", () => {
-    const showEnglish = quoteEn.hidden;
-    quoteEn.hidden = !showEnglish;
-    quoteEl.hidden = showEnglish;
-    translateToggle.setAttribute("aria-pressed", String(showEnglish));
-    translateToggle.textContent = showEnglish ? "Show original (Greek)" : "Show English translation";
+  function showQuote(english) {
+    quoteEn.hidden = !english;
+    quoteEl.hidden = english;
+    translateToggle.setAttribute("aria-pressed", String(english));
+    translateToggle.textContent = t(english ? "quote.showOriginal" : "quote.showTranslation");
     updateQuote();
-  });
+  }
+
+  translateToggle.addEventListener("click", () => showQuote(quoteEn.hidden));
+
+  // The quote is already in Greek, so the Greek site needs no translation button
+  function syncQuoteToLanguage() {
+    translateToggle.hidden = lang === "el";
+    showQuote(false);
+  }
+
+  syncQuoteToLanguage();
+  languageListeners.push(syncQuoteToLanguage);
 
   // --- Contact Form (Formspree) ---
   const form = document.getElementById("contactForm");
   const formStatus = document.getElementById("formStatus");
+  const formLanguage = document.getElementById("formLanguage");
+  let formStatusKey = null;
+
+  function setFormStatus(key, state) {
+    formStatusKey = key;
+    formStatus.className = state ? `form-status is-${state}` : "form-status";
+    formStatus.textContent = t(key);
+  }
+
+  languageListeners.push(() => {
+    if (formStatusKey) formStatus.textContent = t(formStatusKey);
+  });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    formStatus.className = "form-status";
-    formStatus.textContent = "Sending…";
+    formLanguage.value = lang;
+    setFormStatus("form.sending");
 
     try {
       const response = await fetch(form.action, {
@@ -333,11 +432,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       form.reset();
-      formStatus.classList.add("is-success");
-      formStatus.textContent = "Thanks — your message is on its way. I'll reply by email.";
+      setFormStatus("form.success", "success");
     } catch (err) {
-      formStatus.classList.add("is-error");
-      formStatus.textContent = "Something went wrong. Please try again, or reach me on LinkedIn.";
+      setFormStatus("form.error", "error");
     } finally {
       submitBtn.disabled = false;
     }
@@ -353,18 +450,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const gistUrl = "https://gist.githubusercontent.com/dimitris-ebra/2134ebcba345065c106b393cfc3dab64/raw/status.txt";
 
   const statusStates = {
-    1: { className: "is-available", text: "Available for new projects" },
-    0: { className: "is-unavailable", text: "Not taking new projects" },
-    unknown: { className: "is-unknown", text: "Availability unknown" },
+    1: { className: "is-available", key: "status.available" },
+    0: { className: "is-unavailable", key: "status.unavailable" },
+    unknown: { className: "is-unknown", key: "status.unknown" },
   };
+  let currentStatus = { className: "is-unknown", key: "status.checking" };
 
   function renderStatus(state) {
+    currentStatus = state;
     statusEls.forEach((el) => {
       el.classList.remove("is-available", "is-unavailable", "is-unknown");
       el.classList.add(state.className);
-      el.querySelector("[data-status-text]").textContent = state.text;
+      el.querySelector("[data-status-text]").textContent = t(state.key);
     });
   }
+
+  renderStatus(currentStatus);
+  languageListeners.push(() => renderStatus(currentStatus));
 
   async function fetchStatus() {
     try {

@@ -319,6 +319,76 @@ strong {
    border-color: var(--line-strong);
 }
 
+/* EN / ΕΛ switch with a sliding indicator */
+.lang-switch {
+   position: relative;
+   display: inline-grid;
+   grid-template-columns: 1fr 1fr;
+   height: 36px;
+   padding: 3px;
+   border: 1px solid var(--line);
+   border-radius: 999px;
+}
+
+.lang-switch::before {
+   content: "";
+   position: absolute;
+   top: 3px;
+   bottom: 3px;
+   left: 3px;
+   width: calc(50% - 3px);
+   border-radius: 999px;
+   background: var(--fg);
+   transition: transform 0.5s var(--ease-out);
+}
+
+:root[lang="el"] .lang-switch::before {
+   transform: translateX(100%);
+}
+
+.lang-switch button {
+   position: relative;
+   min-width: 34px;
+   padding: 0 0.5rem;
+   border: 0;
+   border-radius: 999px;
+   background: none;
+   font-family: var(--font-mono);
+   font-size: 0.6875rem;
+   font-weight: 500;
+   letter-spacing: 0.04em;
+   color: var(--fg-muted);
+   transition: color 0.3s ease;
+}
+
+.lang-switch button:hover {
+   color: var(--fg);
+}
+
+.lang-switch button[aria-pressed="true"] {
+   color: var(--bg);
+}
+
+/* Language change: fade the copy out and back in around the swap */
+main,
+.site-footer,
+.nav-links {
+   transition: opacity 0.22s ease;
+}
+
+.is-switching-lang main,
+.is-switching-lang .site-footer,
+.is-switching-lang .nav-links {
+   opacity: 0;
+}
+
+/* Greek visitors: hold the English copy back until it has been swapped */
+.js[lang="el"]:not(.i18n-ready) .nav-links,
+.js[lang="el"]:not(.i18n-ready) main,
+.js[lang="el"]:not(.i18n-ready) .site-footer {
+   visibility: hidden;
+}
+
 .theme-toggle svg {
    transition: transform 0.6s var(--ease-out);
 }
@@ -1637,7 +1707,25 @@ strong {
    transform: none;
 }
 
+/* ===== Greek typography ===== */
+/* Greek words run longer, so headings get a little more measure and the hero a smaller size */
+:root[lang="el"] .hero-title {
+   max-width: 14ch;
+   font-size: clamp(2.75rem, 6.6vw, 5.75rem);
+   line-height: 1.02;
+}
+
+:root[lang="el"] .section-title {
+   max-width: 24ch;
+}
+
 /* ===== Responsive ===== */
+@media (max-width: 1100px) {
+   .nav-links {
+      gap: 1.5rem;
+   }
+}
+
 @media (max-width: 1024px) {
    .nav-ext {
       display: none;

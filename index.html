@@ -6,16 +6,26 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <title>Dimitris Ebrahim — Full-Stack Developer | CodeByEbra</title>
 
-   <!-- Apply saved / system theme before first paint -->
+   <!-- Apply saved / system theme and language before first paint -->
    <script>
       (function () {
-         var theme;
-         try { theme = localStorage.getItem("theme"); } catch (e) {}
+         var root = document.documentElement;
+         var theme, lang;
+         try {
+            theme = localStorage.getItem("theme");
+            lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("lang");
+         } catch (e) {}
          if (theme !== "light" && theme !== "dark") {
             theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
          }
-         document.documentElement.setAttribute("data-theme", theme);
-         document.documentElement.classList.add("js");
+         if (lang !== "en" && lang !== "el") {
+            lang = /^el\b/i.test(navigator.language || "") ? "el" : "en";
+         }
+         root.setAttribute("data-theme", theme);
+         root.setAttribute("lang", lang);
+         root.classList.add("js");
+         // Safety net: never keep translated text hidden if script.js fails to load
+         setTimeout(function () { root.classList.add("i18n-ready"); }, 3000);
       })();
    </script>
 
@@ -26,7 +36,7 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
    <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@1,300;1,400&display=swap" />
-   <link rel="stylesheet" href="style.css?v=8" />
+   <link rel="stylesheet" href="style.css?v=10" />
 
    <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)" />
    <meta name="theme-color" content="#0c0c0b" media="(prefers-color-scheme: dark)" />
@@ -42,6 +52,8 @@
    <meta property="og:description" content="Web applications, built end to end — from the database to the deploy." />
    <meta property="og:url" content="https://codebyebra.pages.dev" />
    <meta property="og:type" content="website" />
+   <meta property="og:locale" content="en_GB" />
+   <meta property="og:locale:alternate" content="el_GR" />
 
    <!-- Twitter Card -->
    <meta name="twitter:card" content="summary_large_image" />
@@ -53,33 +65,36 @@
 
    <!-- Robots -->
    <meta name="robots" content="index, follow" />
-
-   <!-- Language -->
-   <meta http-equiv="Content-Language" content="en" />
 </head>
 
 <body>
-   <a class="skip-link" href="#main">Skip to content</a>
+   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
    <!-- Header -->
    <header class="site-header" id="top">
-      <nav class="nav container" aria-label="Primary">
-         <a href="#top" class="brand" aria-label="CodeByEbra — back to top">
+      <nav class="nav container" aria-label="Primary" data-i18n-attr="aria-label:nav.label">
+         <a href="#top" class="brand" aria-label="CodeByEbra — back to top" data-i18n-attr="aria-label:nav.home">
             <span class="brand-mark" aria-hidden="true"></span>codebyebra
          </a>
 
          <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#stack">Stack</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#work" data-i18n="nav.work">Work</a></li>
+            <li><a href="#stack" data-i18n="nav.stack">Stack</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
          </ul>
 
          <div class="nav-actions">
             <a class="nav-ext" href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a class="nav-ext" href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a>
 
-            <button type="button" class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle colour theme">
+            <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:lang.label">
+               <button type="button" lang="en" data-set-lang="en" aria-pressed="true">EN</button>
+               <button type="button" lang="el" data-set-lang="el" aria-pressed="false">ΕΛ</button>
+            </div>
+
+            <button type="button" class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle colour theme"
+               data-i18n-attr="aria-label:theme.toggle">
                <svg class="icon-moon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
                   <path d="M13.5 9.6A5.75 5.75 0 0 1 6.4 2.5a5.75 5.75 0 1 0 7.1 7.1Z" fill="none"
                      stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
@@ -105,10 +120,10 @@
 
       <div class="mobile-menu" id="mobileMenu" hidden>
          <ul class="container">
-            <li><a href="#about">About</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#stack">Stack</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#work" data-i18n="nav.work">Work</a></li>
+            <li><a href="#stack" data-i18n="nav.stack">Stack</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
             <li class="mobile-menu-ext">
                <a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a>
                <a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a>
@@ -123,44 +138,47 @@
       <section class="hero container" aria-labelledby="hero-title">
          <div class="hero-grid" aria-hidden="true"></div>
          <div class="hero-main">
-            <p class="eyebrow">Full-stack developer &middot; Greece</p>
-            <h1 class="hero-title split" id="hero-title">Web applications, built <em>end to&nbsp;end.</em></h1>
-            <p class="hero-lead">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Full-stack developer &middot; Greece</p>
+            <h1 class="hero-title split" id="hero-title" data-i18n="hero.title">Web applications, built <em>end to&nbsp;end.</em></h1>
+            <p class="hero-lead" data-i18n="hero.lead">
                I&rsquo;m <strong>Dimitris Ebrahim</strong>. I design and build secure, dependable web software with
                Python, Flask and JavaScript &mdash; and take it from the first conversation all the way to a
                maintained production deploy.
             </p>
             <div class="hero-actions">
                <a href="#work" class="btn btn-primary">
-                  See selected work
+                  <span data-i18n="hero.ctaWork">See selected work</span>
                   <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                      <path d="M8 2.5v11M3.5 9 8 13.5 12.5 9" fill="none" stroke="currentColor" stroke-width="1.6"
                         stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                </a>
-               <a href="#contact" class="btn btn-ghost">Start a project</a>
+               <a href="#contact" class="btn btn-ghost" data-i18n="hero.ctaContact">Start a project</a>
             </div>
          </div>
 
          <dl class="hero-meta">
             <div>
-               <dt>Status</dt>
+               <dt data-i18n="meta.status">Status</dt>
                <dd class="status is-unknown" data-status>
                   <span class="status-dot" aria-hidden="true"></span>
                   <span data-status-text>Checking availability&hellip;</span>
                </dd>
             </div>
             <div>
-               <dt>Based in</dt>
-               <dd>Greece <span class="muted">&middot; <time data-local-time>EET</time> local</span></dd>
+               <dt data-i18n="meta.location">Based in</dt>
+               <dd>
+                  <span data-i18n="meta.country">Greece</span>
+                  <span class="muted">&middot; <time data-local-time>EET</time> <span data-i18n="meta.localTime">local</span></span>
+               </dd>
             </div>
             <div>
-               <dt>Focus</dt>
+               <dt data-i18n="meta.focus">Focus</dt>
                <dd>Python, Flask, JavaScript</dd>
             </div>
             <div>
-               <dt>Currently</dt>
-               <dd>Studying software &amp; web development</dd>
+               <dt data-i18n="meta.now">Currently</dt>
+               <dd data-i18n="meta.studying">Studying software &amp; web development</dd>
             </div>
          </dl>
       </section>
@@ -168,17 +186,17 @@
       <!-- About -->
       <section class="section container" id="about" aria-labelledby="about-title">
          <header class="section-head">
-            <p class="section-label"><span class="section-num">01</span>About</p>
-            <h2 class="section-title split" id="about-title">Turning creativity and logic into software that <em>matters.</em></h2>
+            <p class="section-label"><span class="section-num">01</span><span data-i18n="nav.about">About</span></p>
+            <h2 class="section-title split" id="about-title" data-i18n="about.title">Turning creativity and logic into software that <em>matters.</em></h2>
          </header>
 
          <div class="section-body">
             <div class="about-copy reveal">
-               <p class="about-intro">
+               <p class="about-intro" data-i18n="about.intro">
                   I&rsquo;m an 18-year-old developer based in Greece, studying full-stack web development, software
                   development, web design and computer science.
                </p>
-               <p>
+               <p data-i18n="about.body">
                   I focus on clean, responsive and user-friendly products, and I see them through from concept to
                   deployment &mdash; robust backend systems, considered front-end interfaces, and the hosting in
                   between. I&rsquo;m constantly exploring new technologies, frameworks and design practices, and I
@@ -189,21 +207,21 @@
             <ol class="principles stagger">
                <li>
                   <span class="principle-num">01</span>
-                  <h3>Requirements first</h3>
-                  <p>I start by understanding how you work, then agree scope, deadlines and revisions before
-                     writing a line of code.</p>
+                  <h3 data-i18n="about.p1.title">Requirements first</h3>
+                  <p data-i18n="about.p1.text">I start by understanding how you work, then agree scope, deadlines and
+                     revisions before writing a line of code.</p>
                </li>
                <li>
                   <span class="principle-num">02</span>
-                  <h3>Secure by default</h3>
-                  <p>Authentication, input validation and protection against XSS and SQL injection are part of the
-                     build &mdash; not an afterthought.</p>
+                  <h3 data-i18n="about.p2.title">Secure by default</h3>
+                  <p data-i18n="about.p2.text">Authentication, input validation and protection against XSS and SQL
+                     injection are part of the build &mdash; not an afterthought.</p>
                </li>
                <li>
                   <span class="principle-num">03</span>
-                  <h3>Shipped and looked after</h3>
-                  <p>I handle hosting and deployment, and keep systems stable with careful updates that never lose
-                     data.</p>
+                  <h3 data-i18n="about.p3.title">Shipped and looked after</h3>
+                  <p data-i18n="about.p3.text">I handle hosting and deployment, and keep systems stable with careful
+                     updates that never lose data.</p>
                </li>
             </ol>
          </div>
@@ -212,8 +230,8 @@
       <!-- Selected work -->
       <section class="section container" id="work" aria-labelledby="work-title">
          <header class="section-head">
-            <p class="section-label"><span class="section-num">02</span>Selected work</p>
-            <h2 class="section-title split" id="work-title">A real client, a real brief, <em>delivered.</em></h2>
+            <p class="section-label"><span class="section-num">02</span><span data-i18n="work.label">Selected work</span></p>
+            <h2 class="section-title split" id="work-title" data-i18n="work.title">A real client, a real brief, <em>delivered.</em></h2>
          </header>
 
          <article class="case">
@@ -221,12 +239,12 @@
             <div class="showcase reveal" id="showcase">
                <div class="showcase-bar">
                   <span>elmylonas.gr</span>
-                  <span>Recorded walkthrough &middot; Desktop &amp; mobile</span>
+                  <span data-i18n="work.showcaseNote">Recorded walkthrough &middot; Desktop &amp; mobile</span>
                </div>
 
                <div class="devices">
                   <button type="button" class="laptop" data-open-video
-                     aria-label="Play the full walkthrough of elmylonas.gr">
+                     aria-label="Play the full walkthrough of elmylonas.gr" data-i18n-attr="aria-label:work.playLabel">
                      <span class="laptop-lid">
                         <span class="laptop-screen">
                            <video class="laptop-video" muted loop playsinline preload="none"
@@ -237,7 +255,7 @@
                               <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
                                  <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
                               </svg>
-                              Watch the full walkthrough
+                              <span data-i18n="work.playHint">Watch the full walkthrough</span>
                            </span>
                         </span>
                      </span>
@@ -246,37 +264,37 @@
 
                   <div class="phone-wrap">
                      <img class="phone" src="assets/elmylonas-mobile.webp" width="628" height="1278" loading="lazy"
-                        decoding="async"
+                        decoding="async" data-i18n-attr="alt:work.phoneAlt"
                         alt="elmylonas.gr on a phone, showing the profile page with the teacher’s photo and introduction" />
                   </div>
                </div>
 
-               <ul class="showcase-modules" aria-label="Platform features">
-                  <li>Public site</li>
-                  <li>Admin panel</li>
-                  <li>Teaching resources</li>
-                  <li>Exam exercises</li>
-                  <li>Quizzes</li>
-                  <li>Announcements</li>
+               <ul class="showcase-modules" aria-label="Platform features" data-i18n-attr="aria-label:work.modulesLabel">
+                  <li data-i18n="work.module.public">Public site</li>
+                  <li data-i18n="work.module.admin">Admin panel</li>
+                  <li data-i18n="work.module.resources">Teaching resources</li>
+                  <li data-i18n="work.module.exams">Exam exercises</li>
+                  <li data-i18n="work.module.quizzes">Quizzes</li>
+                  <li data-i18n="work.module.announcements">Announcements</li>
                </ul>
             </div>
 
             <div class="case-body reveal">
                <div class="case-intro">
-                  <p class="case-kicker">Freelance &middot; First client project</p>
+                  <p class="case-kicker" data-i18n="work.kicker">Freelance &middot; First client project</p>
                   <h3 class="case-title">elmylonas.gr</h3>
-                  <p>
+                  <p data-i18n="work.intro1">
                      The official digital home of Λευτέρης Μυλωνάς, an economist and secondary-education teacher. I
                      built it as a complete professional presence: a public site for students and parents, backed by
                      a secure admin panel for managing content.
                   </p>
-                  <p>
+                  <p data-i18n="work.intro2">
                      The administrator can log in, upload and update teaching material, manage exam exercises and
                      publish announcements without touching code &mdash; turning a static portfolio into a living
                      resource that grows with the educator&rsquo;s work.
                   </p>
                   <button type="button" class="link-arrow" data-open-video>
-                     Watch the walkthrough
+                     <span data-i18n="work.watch">Watch the walkthrough</span>
                      <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
                         <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
                      </svg>
@@ -285,20 +303,20 @@
 
                <dl class="case-meta">
                   <div>
-                     <dt>Client</dt>
+                     <dt data-i18n="work.meta.client">Client</dt>
                      <dd lang="el">Λευτέρης Μυλωνάς</dd>
                   </div>
                   <div>
-                     <dt>Role</dt>
-                     <dd>Design, development, hosting &amp; maintenance</dd>
+                     <dt data-i18n="work.meta.role">Role</dt>
+                     <dd data-i18n="work.meta.roleValue">Design, development, hosting &amp; maintenance</dd>
                   </div>
                   <div>
-                     <dt>Stack</dt>
+                     <dt data-i18n="work.meta.stack">Stack</dt>
                      <dd>Python, Flask, Jinja2, SQLite, JavaScript, Bootstrap</dd>
                   </div>
                   <div>
-                     <dt>Status</dt>
-                     <dd><span class="status is-unavailable"><span class="status-dot" aria-hidden="true"></span>Under maintenance</span></dd>
+                     <dt data-i18n="work.meta.status">Status</dt>
+                     <dd><span class="status is-unavailable"><span class="status-dot" aria-hidden="true"></span><span data-i18n="work.meta.statusValue">Under maintenance</span></span></dd>
                   </div>
                </dl>
             </div>
@@ -311,7 +329,7 @@
                      asked for, tailor made, on time, with outstanding after-sales service.&rdquo;</p>
                </blockquote>
                <figcaption>
-                  <span><span lang="el">Λευτέρης Μυλωνάς</span> &mdash; Economist &amp; teacher</span>
+                  <span><span lang="el">Λευτέρης Μυλωνάς</span> &mdash; <span data-i18n="work.quoteRole">Economist &amp; teacher</span></span>
                   <button type="button" class="text-btn" id="translateToggle" aria-pressed="false">
                      Show English translation
                   </button>
@@ -320,7 +338,7 @@
 
             <details class="case-more reveal">
                <summary>
-                  <span>Read the full case study</span>
+                  <span data-i18n="work.more">Read the full case study</span>
                   <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                      <path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.6"
                         stroke-linecap="round" />
@@ -328,8 +346,8 @@
                </summary>
                <div class="case-more-body">
                   <div>
-                     <h4>The platform</h4>
-                     <p>
+                     <h4 data-i18n="work.platform.title">The platform</h4>
+                     <p data-i18n="work.platform.text">
                         Visitors can explore the teacher&rsquo;s academic background, download teaching resources and
                         find tutoring information, in a design that puts clarity, trust and accessibility first.
                         Integrated contact options (email, phone and social links) and remote-learning support via
@@ -337,14 +355,14 @@
                      </p>
                   </div>
                   <div>
-                     <h4>What I learned</h4>
-                     <p>
+                     <h4 data-i18n="work.learned.title">What I learned</h4>
+                     <p data-i18n="work.learned.text1">
                         My first freelance opportunity came from my economics teacher, who trusted me to build and
                         maintain a web application for their needs. It meant working as both a developer and a
                         service provider: communicating with a client, gathering requirements, meeting deadlines and
                         delivering revisions without losing sight of the bigger picture.
                      </p>
-                     <p>
+                     <p data-i18n="work.learned.text2">
                         Technically, I combined Python (Flask) with JavaScript into a responsive full-stack
                         application, implemented secure authentication, and protected it against common
                         vulnerabilities like XSS and SQL injection. I learned to manage the database carefully
@@ -360,13 +378,13 @@
       <!-- Stack -->
       <section class="section container" id="stack" aria-labelledby="stack-title">
          <header class="section-head">
-            <p class="section-label"><span class="section-num">03</span>Stack</p>
-            <h2 class="section-title split" id="stack-title">The tools I <em>build with.</em></h2>
+            <p class="section-label"><span class="section-num">03</span><span data-i18n="nav.stack">Stack</span></p>
+            <h2 class="section-title split" id="stack-title" data-i18n="stack.title">The tools I <em>build with.</em></h2>
          </header>
 
          <dl class="stack stagger">
             <div class="stack-row">
-               <dt>Languages</dt>
+               <dt data-i18n="stack.languages">Languages</dt>
                <dd><span>Python</span><span>JavaScript</span><span>HTML</span><span>CSS</span><span>C</span><span>C++</span><span>Java</span></dd>
             </div>
             <div class="stack-row">
@@ -374,7 +392,7 @@
                <dd><span>Flask</span><span>Jinja2</span><span>Bootstrap</span></dd>
             </div>
             <div class="stack-row">
-               <dt>Data</dt>
+               <dt data-i18n="stack.data">Data</dt>
                <dd><span>MySQL</span><span>SQLite</span></dd>
             </div>
             <div class="stack-row">
@@ -382,7 +400,7 @@
                <dd><span>Arduino</span><span>Raspberry Pi</span><span>MicroPython</span></dd>
             </div>
             <div class="stack-row stack-row-past">
-               <dt>Previously</dt>
+               <dt data-i18n="stack.previously">Previously</dt>
                <dd><span>C#</span><span>Lua</span><span>Tailwind CSS</span></dd>
             </div>
          </dl>
@@ -391,13 +409,13 @@
       <!-- Contact -->
       <section class="section container" id="contact" aria-labelledby="contact-title">
          <header class="section-head">
-            <p class="section-label"><span class="section-num">04</span>Contact</p>
-            <h2 class="section-title split" id="contact-title">Have a project in mind? <em>Let&rsquo;s&nbsp;talk.</em></h2>
+            <p class="section-label"><span class="section-num">04</span><span data-i18n="nav.contact">Contact</span></p>
+            <h2 class="section-title split" id="contact-title" data-i18n="contact.title">Have a project in mind? <em>Let&rsquo;s&nbsp;talk.</em></h2>
          </header>
 
          <div class="contact reveal">
             <div class="contact-info">
-               <p>
+               <p data-i18n="contact.intro">
                   Tell me what you&rsquo;re building &mdash; a new website, an internal tool, or something that needs
                   fixing. I&rsquo;ll reply by email.
                </p>
@@ -414,7 +432,7 @@
             <form class="contact-form" id="contactForm" action="https://formspree.io/f/xkgvdego" method="POST">
                <div class="field-row">
                   <div class="field">
-                     <label for="name">Name</label>
+                     <label for="name" data-i18n="form.name">Name</label>
                      <input id="name" type="text" name="name" autocomplete="name" required />
                   </div>
                   <div class="field">
@@ -423,19 +441,21 @@
                   </div>
                </div>
                <div class="field">
-                  <label for="subject">Subject <span class="optional">Optional</span></label>
+                  <label for="subject"><span data-i18n="form.subject">Subject</span> <span class="optional" data-i18n="form.optional">Optional</span></label>
                   <input id="subject" type="text" name="subject" />
                </div>
                <div class="field">
-                  <label for="message">Message</label>
+                  <label for="message" data-i18n="form.message">Message</label>
                   <textarea id="message" name="message" rows="5" required></textarea>
                </div>
                <!-- Spam honeypot (Formspree) -->
                <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+               <!-- Tells you which language the visitor was using -->
+               <input type="hidden" name="language" id="formLanguage" value="en" />
 
                <div class="form-footer">
                   <button type="submit" class="btn btn-primary">
-                     Send message
+                     <span data-i18n="form.send">Send message</span>
                      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                         <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6"
                            stroke-linecap="round" stroke-linejoin="round" />
@@ -455,21 +475,23 @@
          <ul class="footer-links">
             <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             <li><a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-            <li><a href="#top">Back to top &uarr;</a></li>
+            <li><a href="#top" data-i18n="footer.top">Back to top &uarr;</a></li>
          </ul>
       </div>
       <div class="container footer-mark split-chars" aria-hidden="true">codebyebra<span class="footer-mark-dot">.</span></div>
    </footer>
 
    <!-- Walkthrough video lightbox -->
-   <dialog class="lightbox" id="videoDialog" aria-label="elmylonas.gr walkthrough video">
+   <dialog class="lightbox" id="videoDialog" aria-label="elmylonas.gr walkthrough video"
+      data-i18n-attr="aria-label:video.label">
       <div class="lightbox-inner">
          <video class="lightbox-video" controls playsinline preload="none"
             poster="assets/elmylonas-walkthrough-poster.webp?v=2">
             <source src="assets/elmylonas-walkthrough.mp4" type="video/mp4" />
          </video>
-         <p class="lightbox-caption">elmylonas.gr &mdash; desktop walkthrough</p>
-         <button type="button" class="icon-btn lightbox-close" data-close-video aria-label="Close video">
+         <p class="lightbox-caption" data-i18n="video.caption">elmylonas.gr &mdash; desktop walkthrough</p>
+         <button type="button" class="icon-btn lightbox-close" data-close-video aria-label="Close video"
+            data-i18n-attr="aria-label:video.close">
             <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
             </svg>
@@ -477,7 +499,8 @@
       </div>
    </dialog>
 
-   <script src="script.js?v=8" defer></script>
+   <script src="translations.js?v=10" defer></script>
+   <script src="script.js?v=10" defer></script>
    <script type="application/ld+json">
       {
          "@context": "https://schema.org",
@@ -492,7 +515,8 @@
             "@type": "Organization",
             "name": "Freelance"
          },
-         "description": "Full-Stack Developer specializing in Python, Flask, and modern front-end frameworks."
+         "description": "Full-Stack Developer specializing in Python, Flask, and modern front-end frameworks.",
+         "knowsLanguage": ["en", "el"]
       }
    </script>
 </body>
