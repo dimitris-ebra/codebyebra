@@ -4,32 +4,49 @@
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>CodeByEbra | Portfolio</title>
-   <link rel="icon"href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-   <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="stylesheet" href="style.css">
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+   <title>Dimitris Ebrahim — Full-Stack Developer | CodeByEbra</title>
 
-   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-   <link rel="preconnect" href="https://images.unsplash.com" />
+   <!-- Apply saved / system theme before first paint -->
+   <script>
+      (function () {
+         var theme;
+         try { theme = localStorage.getItem("theme"); } catch (e) {}
+         if (theme !== "light" && theme !== "dark") {
+            theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+         }
+         document.documentElement.setAttribute("data-theme", theme);
+         document.documentElement.classList.add("js");
+      })();
+   </script>
 
+   <link rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23ff6a2b'/><path d='M26 21 15 32l11 11M38 21l11 11-11 11' fill='none' stroke='%230c0c0b' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@1,300;1,400&display=swap" />
+   <link rel="stylesheet" href="style.css?v=8" />
+
+   <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)" />
+   <meta name="theme-color" content="#0c0c0b" media="(prefers-color-scheme: dark)" />
 
    <meta name="description"
-      content="Portfolio of Dimitris Ebrahim (CodeByEbra), a full-stack web developer specializing in Python, Flask, JavaScript, and modern UI design." />
+      content="Portfolio of Dimitris Ebrahim (CodeByEbra), a full-stack web developer in Greece building secure, dependable web applications with Python, Flask and JavaScript." />
    <meta name="keywords"
-      content="Full-Stack Developer, Python, Flask, JavaScript, Tailwind, Portfolio, Web Design, Greece" />
+      content="Full-Stack Developer, Python, Flask, JavaScript, Web Development, Freelance, Portfolio, Greece" />
    <meta name="author" content="Dimitris Ebrahim" />
 
    <!-- Open Graph (Facebook / LinkedIn / etc.) -->
-   <meta property="og:title" content="CodeByEbra | Full-Stack Developer Portfolio" />
-   <meta property="og:description" content="Explore my projects in Python, Flask, JavaScript, and responsive design." />
+   <meta property="og:title" content="Dimitris Ebrahim — Full-Stack Developer" />
+   <meta property="og:description" content="Web applications, built end to end — from the database to the deploy." />
    <meta property="og:url" content="https://codebyebra.pages.dev" />
    <meta property="og:type" content="website" />
 
    <!-- Twitter Card -->
    <meta name="twitter:card" content="summary_large_image" />
-   <meta name="twitter:title" content="CodeByEbra | Full-Stack Developer Portfolio" />
-   <meta name="twitter:description" content="Building modern, responsive, and user-friendly digital experiences." />
+   <meta name="twitter:title" content="Dimitris Ebrahim — Full-Stack Developer" />
+   <meta name="twitter:description" content="Web applications, built end to end — from the database to the deploy." />
 
    <!-- Canonical (avoid duplicate content issues) -->
    <link rel="canonical" href="https://codebyebra.pages.dev" />
@@ -39,411 +56,428 @@
 
    <!-- Language -->
    <meta http-equiv="Content-Language" content="en" />
-
 </head>
 
-<body class="font-sans bg-background text-text">
+<body>
+   <a class="skip-link" href="#main">Skip to content</a>
 
-   <!-- Navbar -->
-   <header class="fixed top-0 left-0 w-full z-50 bg-[var(--surface)]">
-      <nav class="flex items-center justify-between max-w-6xl mx-auto p-4">
-         <div class="text-xl font-bold nav-brand">CodeByEbra <i class="bi bi-code-slash"></i></div>
+   <!-- Header -->
+   <header class="site-header" id="top">
+      <nav class="nav container" aria-label="Primary">
+         <a href="#top" class="brand" aria-label="CodeByEbra — back to top">
+            <span class="brand-mark" aria-hidden="true"></span>codebyebra
+         </a>
 
-         <!-- Nav Links -->
-         <ul id="nav-links" class="hidden md:flex space-x-6 font-medium">
+         <ul class="nav-links">
             <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#stack">Stack</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank"><i class="bi bi-linkedin"></i>
-                  LinkedIn</a></li>
-            <li><a href="https://github.com/dimitris-ebra" target="_blank"><i class="bi bi-github"></i> GitHub</a></li>
          </ul>
 
-         <!-- Right-side controls -->
-         <div class="flex items-center gap-3">
-           <div id="work-status" class="unavailable hidden sm:inline-flex">
-              <span id="status-dot" class="status-dot"></span>
-              <span id="status-text">Checking...</span>
-           </div>
-           <button id="themeSwitch" class="theme-toggle-btn" title="Toggle light/dark mode">
-              <i class="bi bi-moon-stars-fill"></i>
-           </button>
-           <!-- Hamburger Button -->
-           <button id="menu-btn" class="md:hidden text-2xl focus:outline-none">
-              <i id="menu-icon" class="bi bi-list"></i>
-           </button>
+         <div class="nav-actions">
+            <a class="nav-ext" href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="nav-ext" href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+
+            <button type="button" class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle colour theme">
+               <svg class="icon-moon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M13.5 9.6A5.75 5.75 0 0 1 6.4 2.5a5.75 5.75 0 1 0 7.1 7.1Z" fill="none"
+                     stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+               </svg>
+               <svg class="icon-sun" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.4" />
+                  <path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3.05 3.05l1.13 1.13M11.82 11.82l1.13 1.13M3.05 12.95l1.13-1.13M11.82 4.18l1.13-1.13"
+                     stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+               </svg>
+            </button>
+
+            <button type="button" class="icon-btn menu-btn" id="menuToggle" aria-label="Open menu"
+               aria-expanded="false" aria-controls="mobileMenu">
+               <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path class="menu-line-1" d="M2 5.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                  <path class="menu-line-2" d="M2 10.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+               </svg>
+            </button>
          </div>
-
-         <ul id="mobile-nav"
-           class="hidden absolute top-full left-0 w-full bg-[var(--surface)] flex-col items-center space-y-4 p-6 font-medium shadow-lg md:hidden">
-           <li><a href="#about" class="block w-full text-center">About</a></li>
-           <li><a href="#projects" class="block w-full text-center">Projects</a></li>
-           <li><a href="#contact" class="block w-full text-center">Contact</a></li>
-           <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank"><i class="bi bi-linkedin"></i>
-                 LinkedIn</a></li>
-           <li><a href="https://github.com/dimitris-ebra" target="_blank"><i class="bi bi-github"></i> GitHub</a></li>
-         </ul>
-
-
-
-
       </nav>
+
+      <div class="scroll-progress" aria-hidden="true"></div>
+
+      <div class="mobile-menu" id="mobileMenu" hidden>
+         <ul class="container">
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="mobile-menu-ext">
+               <a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a>
+               <a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </li>
+         </ul>
+      </div>
    </header>
 
+   <main id="main">
 
-   <!-- Hero with gradient parallax -->
-   <section class="hero flex items-center justify-center text-center text-text">
-      <div class="max-w-2xl px-6">
-         <h1 class="text-5xl md:text-7xl font-bold mb-6" id="brand">CodeByEbra</h1>
-         <p class="text-lg md:text-xl mb-8 italic btn-w" id="dev-quote"></p>
-         <a href="#projects" class="btn-w inline-block px-6 py-3 border rounded view-work">View Work 👀</a>
-      </div>
-   </section>
-
-   <!-- About Me Section -->
-   <section id="about" class="py-20 bg-[var(--surface)] text-[var(--text)]">
-      <div class="max-w-5xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-8"><i class="bi bi-info-circle"></i> About Me</h2>
-
-         <p class="mb-6 text-lg leading-relaxed">
-            I’m an <strong>18-year-old developer based in Greece 🇬🇷</strong>, passionate about
-            building modern, functional, and visually engaging digital experiences.
-         </p>
-
-         <p class="mb-6 text-lg leading-relaxed">
-            Currently, I’m studying <strong>Full Stack Web Development, Software Development,
-               Web Design, and Computer Science</strong>. My focus is on crafting
-            clean, responsive, and user-friendly solutions that bring ideas to life —
-            from concept to deployment.
-         </p>
-
-         <p class="mb-6 text-lg leading-relaxed">
-            With a drive to learn and grow, I’m constantly exploring new technologies,
-            frameworks, and design practices. Whether it’s developing robust backend
-            systems, designing sleek frontends, or solving real-world problems with
-            code, I’m dedicated to pushing myself forward and delivering value.
-         </p>
-
-         <p class="text-lg font-semibold text-accent1">
-            My goal: <em>to turn creativity and logic into impactful digital solutions. 🎯</em>
-         </p>
-      </div>
-   </section>
-
-   <!-- Active Tech Stack Section -->
-   <section id="tech" class="py-20 bg-[var(--background)] text-[var(--text)]">
-      <div class="max-w-6xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-12">⚡ Active Tech Stack</h2>
-
-         <!-- Active Tech Icons Grid -->
-         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-            <div class="flex flex-col items-center tech-item">
-               <i class="bi bi-filetype-html text-5xl text-orange-600"></i>
-               <p class="mt-2 font-medium">HTML5</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <i class="bi bi-filetype-css text-5xl text-blue-600"></i>
-               <p class="mt-2 font-medium">CSS3</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <i class="bi bi-filetype-js text-5xl text-yellow-500"></i>
-               <p class="mt-2 font-medium">JavaScript</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">Python</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">Flask</p>
-            </div>
-
-            <div class="flex flex-col items-center tech-item">
-               <i class="bi bi-bootstrap text-5xl text-purple-600"></i>
-               <p class="mt-2 font-medium">Bootstrap</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="C++"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">MySQL</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="C++"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">Sqlite3</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">C++</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C++"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">C</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">Arduino</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
-                  alt="MicroPython" class="w-12 h-12" />
-               <p class="mt-2 font-medium">MicroPython</p>
-            </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/raspberrypi/raspberrypi-original.svg"
-                  alt="Raspberry Pi" class="w-12 h-12" />
-               <p class="mt-2 font-medium">Raspberry Pi</p>
+      <!-- Hero -->
+      <section class="hero container" aria-labelledby="hero-title">
+         <div class="hero-grid" aria-hidden="true"></div>
+         <div class="hero-main">
+            <p class="eyebrow">Full-stack developer &middot; Greece</p>
+            <h1 class="hero-title split" id="hero-title">Web applications, built <em>end to&nbsp;end.</em></h1>
+            <p class="hero-lead">
+               I&rsquo;m <strong>Dimitris Ebrahim</strong>. I design and build secure, dependable web software with
+               Python, Flask and JavaScript &mdash; and take it from the first conversation all the way to a
+               maintained production deploy.
+            </p>
+            <div class="hero-actions">
+               <a href="#work" class="btn btn-primary">
+                  See selected work
+                  <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+                     <path d="M8 2.5v11M3.5 9 8 13.5 12.5 9" fill="none" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+               </a>
+               <a href="#contact" class="btn btn-ghost">Start a project</a>
             </div>
          </div>
-      </div>
-   </section>
 
-   <!-- Past Experience Section -->
-   <section id="past-tech" class="py-20 bg-[var(--surface)] text-[var(--text)]">
-      <div class="max-w-6xl mx-auto px-6 text-center">
-         <h2 class="section-title mb-12">📚 Previously Worked With</h2>
+         <dl class="hero-meta">
+            <div>
+               <dt>Status</dt>
+               <dd class="status is-unknown" data-status>
+                  <span class="status-dot" aria-hidden="true"></span>
+                  <span data-status-text>Checking availability&hellip;</span>
+               </dd>
+            </div>
+            <div>
+               <dt>Based in</dt>
+               <dd>Greece <span class="muted">&middot; <time data-local-time>EET</time> local</span></dd>
+            </div>
+            <div>
+               <dt>Focus</dt>
+               <dd>Python, Flask, JavaScript</dd>
+            </div>
+            <div>
+               <dt>Currently</dt>
+               <dd>Studying software &amp; web development</dd>
+            </div>
+         </dl>
+      </section>
 
-         <!-- Past Tech Icons Grid -->
-         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">C#</p>
+      <!-- About -->
+      <section class="section container" id="about" aria-labelledby="about-title">
+         <header class="section-head">
+            <p class="section-label"><span class="section-num">01</span>About</p>
+            <h2 class="section-title split" id="about-title">Turning creativity and logic into software that <em>matters.</em></h2>
+         </header>
+
+         <div class="section-body">
+            <div class="about-copy reveal">
+               <p class="about-intro">
+                  I&rsquo;m an 18-year-old developer based in Greece, studying full-stack web development, software
+                  development, web design and computer science.
+               </p>
+               <p>
+                  I focus on clean, responsive and user-friendly products, and I see them through from concept to
+                  deployment &mdash; robust backend systems, considered front-end interfaces, and the hosting in
+                  between. I&rsquo;m constantly exploring new technologies, frameworks and design practices, and I
+                  care about delivering real value to the people I build for.
+               </p>
             </div>
-            <div class="flex flex-col items-center tech-item">
-               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg" alt="Lua"
-                  class="w-12 h-12" />
-               <p class="mt-2 font-medium">Lua</p>
-            </div>
-                        <div class="flex flex-col items-center tech-item">
-               <i class="bi bi-layers text-5xl text-cyan-600"></i>
-               <p class="mt-2 font-medium">Tailwind</p>
-            </div>
+
+            <ol class="principles stagger">
+               <li>
+                  <span class="principle-num">01</span>
+                  <h3>Requirements first</h3>
+                  <p>I start by understanding how you work, then agree scope, deadlines and revisions before
+                     writing a line of code.</p>
+               </li>
+               <li>
+                  <span class="principle-num">02</span>
+                  <h3>Secure by default</h3>
+                  <p>Authentication, input validation and protection against XSS and SQL injection are part of the
+                     build &mdash; not an afterthought.</p>
+               </li>
+               <li>
+                  <span class="principle-num">03</span>
+                  <h3>Shipped and looked after</h3>
+                  <p>I handle hosting and deployment, and keep systems stable with careful updates that never lose
+                     data.</p>
+               </li>
+            </ol>
          </div>
-      </div>
-   </section>
+      </section>
 
+      <!-- Selected work -->
+      <section class="section container" id="work" aria-labelledby="work-title">
+         <header class="section-head">
+            <p class="section-label"><span class="section-num">02</span>Selected work</p>
+            <h2 class="section-title split" id="work-title">A real client, a real brief, <em>delivered.</em></h2>
+         </header>
 
+         <article class="case">
+            <!-- Device showcase: desktop walkthrough video + mobile screenshot -->
+            <div class="showcase reveal" id="showcase">
+               <div class="showcase-bar">
+                  <span>elmylonas.gr</span>
+                  <span>Recorded walkthrough &middot; Desktop &amp; mobile</span>
+               </div>
 
-   <!-- Projects Section -->
-   <section id="projects" class="py-20">
-      <div class="max-w-6xl mx-auto px-6">
-         <h2 class="section-title">🚀 Projects</h2>
+               <div class="devices">
+                  <button type="button" class="laptop" data-open-video
+                     aria-label="Play the full walkthrough of elmylonas.gr">
+                     <span class="laptop-lid">
+                        <span class="laptop-screen">
+                           <video class="laptop-video" muted loop playsinline preload="none"
+                              poster="assets/elmylonas-walkthrough-poster.webp?v=2" aria-hidden="true">
+                              <source src="assets/elmylonas-walkthrough.mp4" type="video/mp4" />
+                           </video>
+                           <span class="play-hint">
+                              <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+                                 <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
+                              </svg>
+                              Watch the full walkthrough
+                           </span>
+                        </span>
+                     </span>
+                     <span class="laptop-base" aria-hidden="true"></span>
+                  </button>
 
-         <!-- Project Card Container -->
-         <div class="project-card">
-            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8 items-start card">
-               <!-- Project Image - Better positioned for desktop -->
-               <div class="lg:col-span-1 w-full">
-                  <div class="project-image-container">
-                     <img
-                        src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                        alt="Teacher teaching students in a classroom" class="project-image" loading="lazy" />
+                  <div class="phone-wrap">
+                     <img class="phone" src="assets/elmylonas-mobile.webp" width="628" height="1278" loading="lazy"
+                        decoding="async"
+                        alt="elmylonas.gr on a phone, showing the profile page with the teacher’s photo and introduction" />
                   </div>
                </div>
 
-               <!-- Project Info - Takes more space on desktop -->
-               <div class="lg:col-span-2">
-                  <h3 class="text-2xl font-bold mb-3">
-                     <a href="https://elmylonas.gr" class="project-link">elmylonas.gr</a>
-                     — Λευτέρης Μυλωνάς
-                  </h3>
+               <ul class="showcase-modules" aria-label="Platform features">
+                  <li>Public site</li>
+                  <li>Admin panel</li>
+                  <li>Teaching resources</li>
+                  <li>Exam exercises</li>
+                  <li>Quizzes</li>
+                  <li>Announcements</li>
+               </ul>
+            </div>
 
-                  <!-- Tech Tags -->
-                  <div class="flex flex-wrap gap-2 mb-4">
-                     <span class="project-tag">Python</span>
-                     <span class="project-tag">Flask</span>
-                     <span class="project-tag">JavaScript</span>
-                     <span class="project-tag">Sqlite3</span>
-                     <span class="project-tag">Bootstrap</span>
-                     <span class="project-tag">Css</span>
-                     <span class="project-tag">HTML</span>
-                     <span class="project-tag">Jinja2</span>
+            <div class="case-body reveal">
+               <div class="case-intro">
+                  <p class="case-kicker">Freelance &middot; First client project</p>
+                  <h3 class="case-title">elmylonas.gr</h3>
+                  <p>
+                     The official digital home of Λευτέρης Μυλωνάς, an economist and secondary-education teacher. I
+                     built it as a complete professional presence: a public site for students and parents, backed by
+                     a secure admin panel for managing content.
+                  </p>
+                  <p>
+                     The administrator can log in, upload and update teaching material, manage exam exercises and
+                     publish announcements without touching code &mdash; turning a static portfolio into a living
+                     resource that grows with the educator&rsquo;s work.
+                  </p>
+                  <button type="button" class="link-arrow" data-open-video>
+                     Watch the walkthrough
+                     <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
+                     </svg>
+                  </button>
+               </div>
+
+               <dl class="case-meta">
+                  <div>
+                     <dt>Client</dt>
+                     <dd lang="el">Λευτέρης Μυλωνάς</dd>
                   </div>
+                  <div>
+                     <dt>Role</dt>
+                     <dd>Design, development, hosting &amp; maintenance</dd>
+                  </div>
+                  <div>
+                     <dt>Stack</dt>
+                     <dd>Python, Flask, Jinja2, SQLite, JavaScript, Bootstrap</dd>
+                  </div>
+                  <div>
+                     <dt>Status</dt>
+                     <dd><span class="status is-unavailable"><span class="status-dot" aria-hidden="true"></span>Under maintenance</span></dd>
+                  </div>
+               </dl>
+            </div>
 
-                  <!-- Brief Description (Always Visible) -->
-                  <div class="project-brief">
+            <figure class="testimonial">
+               <blockquote>
+                  <p lang="el" data-quote="el">&ldquo;Άψογη δουλειά, επαγγελματισμός, ακριβώς όπως ζήτησα το site,
+                     tailor made, on time και εξαιρετικό after sales service.&rdquo;</p>
+                  <p lang="en" data-quote="en" hidden>&ldquo;Impeccable work and professionalism &mdash; exactly the site I
+                     asked for, tailor made, on time, with outstanding after-sales service.&rdquo;</p>
+               </blockquote>
+               <figcaption>
+                  <span><span lang="el">Λευτέρης Μυλωνάς</span> &mdash; Economist &amp; teacher</span>
+                  <button type="button" class="text-btn" id="translateToggle" aria-pressed="false">
+                     Show English translation
+                  </button>
+               </figcaption>
+            </figure>
 
-                     <p class="mb-4">
-                        <strong>elmylonas.gr</strong> is the official digital hub of
-                        Λευτέρης Μυλωνάς, an economist and secondary-education teacher.
-                        The website was built as a <em>complete professional presence</em>
-                        with both public-facing content and a private admin environment.
-                     </p>
-
-                     <p class="mb-6">
-                        The platform combines a <strong>modern, responsive frontend</strong>
-                        with a <strong>secure backend and admin panel</strong> for content management.
-                        administrator can log in, upload and update teaching material,
-                        manage exam exercises, and publish announcements without touching
-                        code. This transforms the site from a static portfolio into a
-                        living resource that evolves with the educator’s work.
+            <details class="case-more reveal">
+               <summary>
+                  <span>Read the full case study</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+                     <path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" />
+                  </svg>
+               </summary>
+               <div class="case-more-body">
+                  <div>
+                     <h4>The platform</h4>
+                     <p>
+                        Visitors can explore the teacher&rsquo;s academic background, download teaching resources and
+                        find tutoring information, in a design that puts clarity, trust and accessibility first.
+                        Integrated contact options (email, phone and social links) and remote-learning support via
+                        Zoom keep communication with students simple.
                      </p>
                   </div>
-
-                  <!-- Detailed Content (Initially Hidden) -->
-                  <div id="project-details-1" class="project-details hidden">
-                     <p class="mb-6">
-                        On the frontend, visitors can easily explore academic background,
-                        downloadable teaching resources, and tutoring information, with a
-                        design that emphasizes clarity, trust, and accessibility. Integrated
-                        contact options (email, phone, social links) and remote learning
-                        support (Zoom) ensure seamless communication with students.
+                  <div>
+                     <h4>What I learned</h4>
+                     <p>
+                        My first freelance opportunity came from my economics teacher, who trusted me to build and
+                        maintain a web application for their needs. It meant working as both a developer and a
+                        service provider: communicating with a client, gathering requirements, meeting deadlines and
+                        delivering revisions without losing sight of the bigger picture.
                      </p>
-
-                     <h4 class="mb-4 text-xl font-semibold">Lessons from My First Freelance Project</h4>
-
-                     <p class="mb-6">
-                        My first freelancing opportunity came from my economics teacher, who trusted me to build and
-                        maintain a web application
-                        for their needs. It was a real turning point for me, because I had to approach the project as
-                        both a developer and a
-                        service provider. I learned how to communicate with a client, gather requirements, meet
-                        deadlines, and deliver revisions
-                        without losing sight of the bigger picture. On the technical side, I combined Python (Flask)
-                        with JavaScript to create a
-                        responsive full-stack solution, implemented secure user authentication, and protected the app
-                        against common
-                        vulnerabilities like XSS and SQL injection. I also gained valuable experience managing databases
-                        carefully during major
-                        updates, ensuring no data was lost, and updating the system without breaking existing
-                        functionality. Beyond development,
-                        I took responsibility for hosting and deploying the Flask application, learned how to monitor
-                        and maintain it in
-                        production, and still ensure that the client’s system remains stable. This project not only
-                        sharpened my technical
-                        skills in building professional CRUD applications but also taught me the importance of
-                        reliability, security, and clear
-                        communication when delivering real-world solutions.
+                     <p>
+                        Technically, I combined Python (Flask) with JavaScript into a responsive full-stack
+                        application, implemented secure authentication, and protected it against common
+                        vulnerabilities like XSS and SQL injection. I learned to manage the database carefully
+                        through major updates so no data was ever lost, and I took ownership of hosting, deploying
+                        and monitoring the app in production &mdash; where I still keep it stable today.
                      </p>
-
-                     <!-- Testimonial Card -->
-                     <div class="bg-[var(--background)] text-[var(--text)] p-6 rounded-xl shadow-md mb-6">
-                        <p id="review-gr" class="italic">
-                           “Άψογη δουλειά, επαγγελματισμός, ακριβώς όπως ζήτησα το site,
-                           tailor made, on time και εξαιρετικό after sales service.”
-                        </p>
-                        <p id="review-en" class="italic hidden">
-                           “Excellent work, professionalism, exactly as I requested the site,
-                           tailor made, on time and outstanding after-sales service.”
-                        </p>
-
-                        <!-- Stars -->
-                        <div class="mt-4 flex items-center gap-1 text-yellow-400">
-                           <i class="bi bi-star-fill"></i>
-                           <i class="bi bi-star-fill"></i>
-                           <i class="bi bi-star-fill"></i>
-                           <i class="bi bi-star-fill"></i>
-                           <i class="bi bi-star-fill"></i>
-                        </div>
-
-                        <!-- Translate button -->
-                        <button
-                           onclick="document.getElementById('review-gr').classList.toggle('hidden'); document.getElementById('review-en').classList.toggle('hidden');"
-                           class="mt-4 flex items-center gap-2 text-accent1 hover:underline">
-                           <i class="bi bi-translate"></i> Translate
-                        </button>
-                     </div>
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div class="flex flex-wrap gap-3 items-center">
-                     <a href="https://elmylonas.gr" target="_blank" class="btn btn-w">View Live Site</a>
-                     <button onclick="toggleProjectDetails('project-details-1', this)" class="view-more-btn">
-                        View More
-                     </button>
                   </div>
                </div>
+            </details>
+         </article>
+      </section>
+
+      <!-- Stack -->
+      <section class="section container" id="stack" aria-labelledby="stack-title">
+         <header class="section-head">
+            <p class="section-label"><span class="section-num">03</span>Stack</p>
+            <h2 class="section-title split" id="stack-title">The tools I <em>build with.</em></h2>
+         </header>
+
+         <dl class="stack stagger">
+            <div class="stack-row">
+               <dt>Languages</dt>
+               <dd><span>Python</span><span>JavaScript</span><span>HTML</span><span>CSS</span><span>C</span><span>C++</span><span>Java</span></dd>
             </div>
+            <div class="stack-row">
+               <dt>Web</dt>
+               <dd><span>Flask</span><span>Jinja2</span><span>Bootstrap</span></dd>
+            </div>
+            <div class="stack-row">
+               <dt>Data</dt>
+               <dd><span>MySQL</span><span>SQLite</span></dd>
+            </div>
+            <div class="stack-row">
+               <dt>Hardware</dt>
+               <dd><span>Arduino</span><span>Raspberry Pi</span><span>MicroPython</span></dd>
+            </div>
+            <div class="stack-row stack-row-past">
+               <dt>Previously</dt>
+               <dd><span>C#</span><span>Lua</span><span>Tailwind CSS</span></dd>
+            </div>
+         </dl>
+      </section>
+
+      <!-- Contact -->
+      <section class="section container" id="contact" aria-labelledby="contact-title">
+         <header class="section-head">
+            <p class="section-label"><span class="section-num">04</span>Contact</p>
+            <h2 class="section-title split" id="contact-title">Have a project in mind? <em>Let&rsquo;s&nbsp;talk.</em></h2>
+         </header>
+
+         <div class="contact reveal">
+            <div class="contact-info">
+               <p>
+                  Tell me what you&rsquo;re building &mdash; a new website, an internal tool, or something that needs
+                  fixing. I&rsquo;ll reply by email.
+               </p>
+               <p class="status is-unknown" data-status>
+                  <span class="status-dot" aria-hidden="true"></span>
+                  <span data-status-text>Checking availability&hellip;</span>
+               </p>
+               <ul class="contact-links stagger">
+                  <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><span class="muted">/in/dimitrisebra</span></a></li>
+                  <li><a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span class="muted">@dimitris-ebra</span></a></li>
+               </ul>
+            </div>
+
+            <form class="contact-form" id="contactForm" action="https://formspree.io/f/xkgvdego" method="POST">
+               <div class="field-row">
+                  <div class="field">
+                     <label for="name">Name</label>
+                     <input id="name" type="text" name="name" autocomplete="name" required />
+                  </div>
+                  <div class="field">
+                     <label for="email">Email</label>
+                     <input id="email" type="email" name="email" autocomplete="email" required />
+                  </div>
+               </div>
+               <div class="field">
+                  <label for="subject">Subject <span class="optional">Optional</span></label>
+                  <input id="subject" type="text" name="subject" />
+               </div>
+               <div class="field">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" rows="5" required></textarea>
+               </div>
+               <!-- Spam honeypot (Formspree) -->
+               <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+               <div class="form-footer">
+                  <button type="submit" class="btn btn-primary">
+                     Send message
+                     <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6"
+                           stroke-linecap="round" stroke-linejoin="round" />
+                     </svg>
+                  </button>
+                  <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+               </div>
+            </form>
          </div>
-
-
-
-      </div>
-      </div>
-   </section>
-
-
-
-
-
-
-   <section id="contact" class="py-20 max-w-6xl mx-auto px-6">
-      <h2 class="section-title"><i class="bi bi-send-fill"></i> Contact</h2>
-      <form class="max-w-xl mx-auto space-y-6" action="https://formspree.io/f/xkgvdego" method="POST">
-
-         <!-- Name -->
-         <input type="text" name="name" placeholder="Name" class="input" required>
-
-         <!-- Email -->
-         <input type="email" name="email" placeholder="Email" class="input" required>
-
-         <!-- Subject -->
-         <input type="text" name="subject" placeholder="Subject" class="input">
-
-         <!-- Message -->
-         <textarea name="message" placeholder="Message" class="input h-32" required></textarea>
-
-         <!-- Submit -->
-         <button type="submit" class="btn btn-w">Send Message ✉️</button>
-      </form>
-   </section>
-
+      </section>
+   </main>
 
    <!-- Footer -->
-   <footer class="py-8 text-center border-t border-border">
-      <p>&copy; 2025 Dimitrios Ebrahim Loukodimos. All rights reserved. ✨</p>
-      <p>Made with
-         <span class="relative group inline-block">
-            <button id="themeToggle" class="text-white rounded-lg">💜</button>
-            <span class="absolute bottom-full left-1/2 mb-2 w-max -translate-x-1/2
-              rounded-lg bg-gray-800 px-2 py-1 text-sm text-white 
-              opacity-0 group-hover:opacity-100 transition-opacity">
-               Click me!
-            </span>
-         </span>
-      </p>
-      <p>
-         <a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer"
-            class="text-decoration-none text-primary d-inline-flex align-items-center gap-2">
-            <i class="bi bi-linkedin"></i>
-         </a>
-         <a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer"
-            class="text-decoration-none text-primary d-inline-flex align-items-center gap-2">
-            <i class="bi bi-github"></i>
-         </a>
-      </p>
+   <footer class="site-footer">
+      <div class="container footer-inner">
+         <p>&copy; <span data-year>2026</span> Dimitrios Ebrahim Loukodimos</p>
+         <ul class="footer-links">
+            <li><a href="https://linkedin.com/in/dimitrisebra" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://github.com/dimitris-ebra" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li><a href="#top">Back to top &uarr;</a></li>
+         </ul>
+      </div>
+      <div class="container footer-mark split-chars" aria-hidden="true">codebyebra<span class="footer-mark-dot">.</span></div>
    </footer>
 
-
-   <!-- Go to Top Button -->
-   <button id="goTopBtn" class="hidden fixed bottom-6 right-6 p-3 ">
-      <i class="bi bi-arrow-up"></i>
-   </button>
-
-   <!-- Love Modal -->
-   <div id="loveModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-[99999]">
-      <div class="bg-white rounded-2xl p-8 max-w-md text-center relative shadow-xl love-modal">
-         <button id="closeModal"
-            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-         <h2 class="text-2xl font-bold text-pink-600 mb-4">You Found the Secret 💖</h2>
-         <p class="text-gray-700 mb-6">
-            Welcome to Love Mode! Enjoy the floating hearts, the pink vibes,
-            and remember — good design is made with love.
-         </p>
-         <button id="modalOkay" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg">
-            Got it 💕
+   <!-- Walkthrough video lightbox -->
+   <dialog class="lightbox" id="videoDialog" aria-label="elmylonas.gr walkthrough video">
+      <div class="lightbox-inner">
+         <video class="lightbox-video" controls playsinline preload="none"
+            poster="assets/elmylonas-walkthrough-poster.webp?v=2">
+            <source src="assets/elmylonas-walkthrough.mp4" type="video/mp4" />
+         </video>
+         <p class="lightbox-caption">elmylonas.gr &mdash; desktop walkthrough</p>
+         <button type="button" class="icon-btn lightbox-close" data-close-video aria-label="Close video">
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
          </button>
       </div>
-   </div>
+   </dialog>
 
-
-   <script src="script.js"></script>
+   <script src="script.js?v=8" defer></script>
    <script type="application/ld+json">
       {
          "@context": "https://schema.org",

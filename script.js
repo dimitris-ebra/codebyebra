@@ -1,471 +1,382 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Mobile Menu Toggle ---
-  const menuBtn = document.getElementById("menu-btn");
-  const menuIcon = document.getElementById("menu-icon");
-  const mobileNav = document.getElementById("mobile-nav");
+  const root = document.documentElement;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  menuBtn.addEventListener("click", () => {
-    mobileNav.classList.toggle("hidden");
+  // --- Theme Toggle ---
+  const themeToggle = document.getElementById("themeToggle");
+  const themeColor = { light: "#f6f5f0", dark: "#0c0c0b" };
 
-    if (mobileNav.classList.contains("hidden")) {
-      menuIcon.classList.replace("bi-x", "bi-list");
-    } else {
-      menuIcon.classList.replace("bi-list", "bi-x");
-    }
-  });
-
-  // --- Smooth Scroll Function (reusable) ---
-  function smoothScrollTo(targetY, duration) {
-    const startY = window.scrollY || window.pageYOffset;
-    const diff = targetY - startY;
-    let startTime = null;
-
-    function step(currentTime) {
-      if (!startTime) startTime = currentTime;
-      const timeElapsed = currentTime - startTime;
-      const progress = Math.min(timeElapsed / duration, 1);
-
-      // easeInOutCubic
-      const ease =
-        progress < 0.5 ?
-        4 * progress * progress * progress :
-        1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-      window.scrollTo(0, startY + diff * ease);
-
-      if (timeElapsed < duration) requestAnimationFrame(step);
-    }
-
-    requestAnimationFrame(step);
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute("content", themeColor[theme]);
+    });
   }
 
-  // --- Anchor Links Smooth Scroll ---
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute("href"));
-      if (target) {
-        smoothScrollTo(target.offsetTop, 600);
-      }
+  themeToggle.addEventListener("click", () => {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch (e) {}
+  });
+
+  // Follow the OS setting until the visitor picks a theme themselves
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    let saved = null;
+    try {
+      saved = localStorage.getItem("theme");
+    } catch (err) {}
+    if (!saved) applyTheme(e.matches ? "dark" : "light");
+  });
+
+  // --- Mobile Menu ---
+  const menuToggle = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  function setMenu(open) {
+    mobileMenu.hidden = !open;
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  }
+
+  menuToggle.addEventListener("click", () => setMenu(mobileMenu.hidden));
+  mobileMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setMenu(false));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !mobileMenu.hidden) {
+      setMenu(false);
+      menuToggle.focus();
+    }
+  });
+  window.matchMedia("(min-width: 721px)").addEventListener("change", (e) => {
+    if (e.matches) setMenu(false);
+  });
+
+  // --- Split Text (word / character reveals) ---
+  // Wraps each word (or character) of an element's text in a span with an
+  // index, keeping nested elements like <em> intact. Non-breaking spaces stay
+  // inside a word so "to&nbsp;end." animates as one piece.
+  function splitText(el, mode, className) {
+    let index = 0;
+
+    function walk(node) {
+      [...node.childNodes].forEach((child) => {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          walk(child);
+          return;
+        }
+        if (child.nodeType !== Node.TEXT_NODE) return;
+
+        const pieces = mode === "chars" ? [...child.textContent] : child.textContent.split(/([ \t\r\n]+)/);
+        const frag = document.createDocumentFragment();
+        pieces.forEach((piece) => {
+          if (!piece) return;
+          if (/^[ \t\r\n]+$/.test(piece)) {
+            frag.append(" ");
+            return;
+          }
+          const span = document.createElement("span");
+          span.className = className;
+          span.style.setProperty("--i", index++);
+          span.textContent = piece;
+          frag.append(span);
+        });
+        child.replaceWith(frag);
+      });
+    }
+
+    walk(el);
+    return index;
+  }
+
+  document.querySelectorAll(".split").forEach((el) => splitText(el, "words", "w"));
+  document.querySelectorAll(".split-chars").forEach((el) => splitText(el, "chars", "c"));
+  document.querySelectorAll(".testimonial blockquote p").forEach((el) => splitText(el, "words", "tw"));
+
+  // Index children for staggered reveals
+  document.querySelectorAll(".stagger, .hero-meta, .showcase-modules").forEach((group) => {
+    [...group.children].forEach((child, i) => child.style.setProperty("--i", i));
+  });
+
+  // --- Hero Load-in ---
+  const hero = document.querySelector(".hero");
+  requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("is-loaded")));
+
+  // --- Scroll Reveal ---
+  const revealEls = document.querySelectorAll(".reveal, .stagger, .section-head, .footer-mark");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    );
+    revealEls.forEach((el) => observer.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add("is-visible"));
+  }
+
+  // --- Scrollspy (highlight the nav link for the section in view) ---
+  const navLinks = document.querySelectorAll(".nav-links a");
+  if ("IntersectionObserver" in window) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const link = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+          if (!link) return;
+          if (entry.isIntersecting) {
+            navLinks.forEach((a) => a.classList.remove("is-active"));
+            link.classList.add("is-active");
+          } else {
+            link.classList.remove("is-active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    document.querySelectorAll("main section[id]").forEach((section) => spy.observe(section));
+  }
+
+  // --- Scroll-linked effects (header, progress bar, parallax, testimonial) ---
+  const header = document.querySelector(".site-header");
+  const showcase = document.getElementById("showcase");
+  const phoneWrap = document.querySelector(".phone-wrap");
+  const quote = document.querySelector(".testimonial blockquote");
+  let ticking = false;
+
+  function updateQuote() {
+    const visible = quote.querySelector("p:not([hidden])");
+    const words = visible.querySelectorAll(".tw");
+    const rect = quote.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // 0 when the quote's top reaches 85% of the viewport, 1 when its bottom reaches 50%
+    const progress = Math.min(Math.max((vh * 0.85 - rect.top) / (vh * 0.35 + rect.height), 0), 1);
+    const lit = Math.round(progress * words.length);
+    words.forEach((word, i) => word.classList.toggle("is-lit", i < lit));
+  }
+
+  function onScroll() {
+    ticking = false;
+    const scrollY = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+
+    header.classList.toggle("is-scrolled", scrollY > 8);
+    header.style.setProperty("--progress", max > 0 ? (scrollY / max).toFixed(4) : 0);
+
+    updateQuote();
+    if (reducedMotion) return;
+
+    const rect = showcase.getBoundingClientRect();
+    const vh = window.innerHeight;
+    if (rect.bottom > 0 && rect.top < vh) {
+      // -1 (showcase centred above viewport) … 1 (below); the phone drifts against the scroll
+      const offset = (rect.top + rect.height / 2 - vh / 2) / vh;
+      phoneWrap.style.setProperty("--py", `${(offset * 70).toFixed(1)}px`);
+    }
+  }
+
+  function requestScrollUpdate() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(onScroll);
+    }
+  }
+
+  onScroll();
+  window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+  window.addEventListener("resize", requestScrollUpdate);
+
+  // --- Pointer effects (desktop only) ---
+  if (finePointer) {
+    // Hero: accent dots light up around the cursor
+    const heroGrid = document.querySelector(".hero-grid");
+    hero.addEventListener("pointermove", (e) => {
+      const r = hero.getBoundingClientRect();
+      heroGrid.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      heroGrid.style.setProperty("--my", `${e.clientY - r.top}px`);
+      heroGrid.style.setProperty("--spot", 1);
+    });
+    hero.addEventListener("pointerleave", () => heroGrid.style.setProperty("--spot", 0));
+  }
+
+  if (finePointer && !reducedMotion) {
+
+    // Showcase: devices tilt toward the cursor, glow follows it
+    const devices = showcase.querySelector(".devices");
+    showcase.addEventListener("pointermove", (e) => {
+      const r = showcase.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      devices.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
+      devices.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
+      showcase.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      showcase.style.setProperty("--my", `${e.clientY - r.top}px`);
+    });
+    showcase.addEventListener("pointerleave", () => {
+      devices.style.setProperty("--ry", "0deg");
+      devices.style.setProperty("--rx", "0deg");
+    });
+
+    // Buttons lean toward the cursor
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("pointermove", (e) => {
+        const r = btn.getBoundingClientRect();
+        btn.style.setProperty("--tx", `${((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1)}px`);
+        btn.style.setProperty("--ty", `${((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1)}px`);
+      });
+      btn.addEventListener("pointerleave", () => {
+        btn.style.removeProperty("--tx");
+        btn.style.removeProperty("--ty");
+      });
+    });
+  }
+
+  // --- Walkthrough Video ---
+  const inlineVideo = document.querySelector(".laptop-video");
+  const videoDialog = document.getElementById("videoDialog");
+  const dialogVideo = videoDialog.querySelector("video");
+  let inlineInView = false;
+
+  function playInline() {
+    if (reducedMotion || videoDialog.open) return;
+    const attempt = inlineVideo.play();
+    if (attempt) attempt.catch(() => {});
+  }
+
+  // Only play (and download) the inline loop while it is on screen
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        inlineInView = entry.isIntersecting;
+        if (inlineInView) playInline();
+        else inlineVideo.pause();
+      },
+      { threshold: 0.35 }
+    ).observe(inlineVideo);
+  }
+
+  document.querySelectorAll("[data-open-video]").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      inlineVideo.pause();
+      if (inlineVideo.currentTime > 0) dialogVideo.currentTime = inlineVideo.currentTime;
+      videoDialog.showModal();
+      const attempt = dialogVideo.play();
+      if (attempt) attempt.catch(() => {});
     });
   });
 
-  // --- Go To Top Button ---
-  const goTopBtn = document.getElementById("goTopBtn");
+  videoDialog.querySelector("[data-close-video]").addEventListener("click", () => videoDialog.close());
+  // Clicking the dimmed backdrop closes the dialog
+  videoDialog.addEventListener("click", (e) => {
+    if (e.target === videoDialog) videoDialog.close();
+  });
+  videoDialog.addEventListener("close", () => {
+    dialogVideo.pause();
+    if (inlineInView) playInline();
+  });
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-      goTopBtn.classList.add("show");
-      goTopBtn.classList.remove("hide");
-    } else {
-      goTopBtn.classList.add("hide");
-      goTopBtn.classList.remove("show");
+  // --- Local Time (Greece) ---
+  const timeEls = document.querySelectorAll("[data-local-time]");
+  const timeFormat = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Athens",
+  });
+
+  function updateTime() {
+    const now = timeFormat.format(new Date());
+    timeEls.forEach((el) => (el.textContent = now));
+  }
+
+  updateTime();
+  setInterval(updateTime, 30000);
+
+  // --- Testimonial Translation ---
+  const translateToggle = document.getElementById("translateToggle");
+  const quoteEl = document.querySelector('[data-quote="el"]');
+  const quoteEn = document.querySelector('[data-quote="en"]');
+
+  translateToggle.addEventListener("click", () => {
+    const showEnglish = quoteEn.hidden;
+    quoteEn.hidden = !showEnglish;
+    quoteEl.hidden = showEnglish;
+    translateToggle.setAttribute("aria-pressed", String(showEnglish));
+    translateToggle.textContent = showEnglish ? "Show original (Greek)" : "Show English translation";
+    updateQuote();
+  });
+
+  // --- Contact Form (Formspree) ---
+  const form = document.getElementById("contactForm");
+  const formStatus = document.getElementById("formStatus");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    formStatus.className = "form-status";
+    formStatus.textContent = "Sending…";
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      form.reset();
+      formStatus.classList.add("is-success");
+      formStatus.textContent = "Thanks — your message is on its way. I'll reply by email.";
+    } catch (err) {
+      formStatus.classList.add("is-error");
+      formStatus.textContent = "Something went wrong. Please try again, or reach me on LinkedIn.";
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 
-  goTopBtn.addEventListener("click", () => {
-    smoothScrollTo(0, 600);
+  // --- Footer Year ---
+  document.querySelectorAll("[data-year]").forEach((el) => {
+    el.textContent = new Date().getFullYear();
   });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const statusWrapper = document.getElementById("work-status");
-  const statusDot = document.getElementById("status-dot");
-  const statusText = document.getElementById("status-text");
-
-  // ✅ Direct gist raw URL
+  // --- Work Status (from gist) ---
+  const statusEls = document.querySelectorAll("[data-status]");
   const gistUrl = "https://gist.githubusercontent.com/dimitris-ebra/2134ebcba345065c106b393cfc3dab64/raw/status.txt";
+
+  const statusStates = {
+    1: { className: "is-available", text: "Available for new projects" },
+    0: { className: "is-unavailable", text: "Not taking new projects" },
+    unknown: { className: "is-unknown", text: "Availability unknown" },
+  };
+
+  function renderStatus(state) {
+    statusEls.forEach((el) => {
+      el.classList.remove("is-available", "is-unavailable", "is-unknown");
+      el.classList.add(state.className);
+      el.querySelector("[data-status-text]").textContent = state.text;
+    });
+  }
 
   async function fetchStatus() {
     try {
       // Bypass cache by adding timestamp
       const response = await fetch(`${gistUrl}?t=${Date.now()}`);
-      let text = await response.text();
-
-      text = text.trim(); // Normalize input
-
-      console.log("Fetched status value:", JSON.stringify(text));
-
-      if (text === "1") {
-        statusWrapper.className = "available";
-        statusText.textContent = "Available For Work";
-      } else if (text === "0") {
-        statusWrapper.className = "unavailable";
-        statusText.textContent = "Unavailable For Work";
-      } else {
-        statusWrapper.className = "unknown";
-        statusText.textContent = "Unknown";
-      }
+      const text = (await response.text()).trim();
+      renderStatus(statusStates[text] || statusStates.unknown);
     } catch (err) {
-      console.error("Error fetching status:", err);
-      statusWrapper.className = "unknown";
-      statusText.textContent = "Unknown";
+      renderStatus(statusStates.unknown);
     }
   }
 
   fetchStatus();
   setInterval(fetchStatus, 60000);
 });
-
-const originalTitle = document.title;
-
-window.addEventListener("blur", () => {
-  document.title = "💜 Come back, I miss you! 💜";
-});
-
-window.addEventListener("focus", () => {
-  document.title = originalTitle;
-});
-
-const brandEl = document.getElementById("brand");
-const brandText = "CodeByEbra";
-let i = 0;
-
-function typeBrand() {
-  if (i < brandText.length) {
-    brandEl.textContent += brandText.charAt(i);
-    i++;
-    setTimeout(typeBrand, 80); // typing speed
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  brandEl.textContent = ""; // make sure it's empty
-  typeBrand();
-});
-
-
-const devQuotes = [{
-    quote: "Talk is cheap. Show me the code.",
-    author: "Linus Torvalds"
-  },
-  {
-    quote: "Programs must be written for people to read, and only incidentally for machines to execute.",
-    author: "Harold Abelson"
-  },
-  {
-    quote: "Good code is its own best documentation.",
-    author: "Steve McConnell"
-  },
-  {
-    quote: "First, solve the problem. Then, write the code.",
-    author: "John Johnson"
-  },
-  {
-    quote: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-    author: "Martin Fowler"
-  },
-  {
-    quote: "Premature optimization is the root of all evil.",
-    author: "Donald Knuth"
-  },
-  {
-    quote: "Simplicity is the soul of efficiency.",
-    author: "Austin Freeman"
-  },
-  {
-    quote: "Code never lies, comments sometimes do.",
-    author: "Ron Jeffries"
-  },
-  {
-    quote: "Experience is the name everyone gives to their mistakes.",
-    author: "Oscar Wilde"
-  },
-  {
-    quote: "If debugging is the process of removing bugs, then programming must be the process of putting them in.",
-    author: "Edsger W. Dijkstra"
-  },
-  {
-    quote: "Walking on water and developing software from a specification are easy if both are frozen.",
-    author: "Edward V. Berard"
-  },
-  {
-    quote: "Before software can be reusable it first has to be usable.",
-    author: "Ralph Johnson"
-  },
-  {
-    quote: "Make it work, make it right, make it fast.",
-    author: "Kent Beck"
-  },
-  {
-    quote: "It’s not a bug – it’s an undocumented feature.",
-    author: "Anonymous"
-  },
-  {
-    quote: "There are only two kinds of languages: the ones people complain about and the ones nobody uses.",
-    author: "Bjarne Stroustrup"
-  },
-  {
-    quote: "The most disastrous thing that you can ever learn is your first programming language.",
-    author: "Alan Kay"
-  },
-  {
-    quote: "Measuring programming progress by lines of code is like measuring aircraft building progress by weight.",
-    author: "Bill Gates"
-  },
-  {
-    quote: "Controlling complexity is the essence of computer programming.",
-    author: "Brian Kernighan"
-  },
-  {
-    quote: "Programming isn’t about what you know; it’s about what you can figure out.",
-    author: "Chris Pine"
-  },
-  {
-    quote: "Deleted code is debugged code.",
-    author: "Jeff Sickel"
-  },
-  {
-    quote: "The best thing about a boolean is even if you are wrong, you are only off by a bit.",
-    author: "Anonymous"
-  },
-  {
-    quote: "The most important property of a program is whether it accomplishes the intention of its user.",
-    author: "C.A.R. Hoare"
-  },
-  {
-    quote: "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday’s code.",
-    author: "Dan Salomon"
-  },
-  {
-    quote: "Programming is learned by writing programs.",
-    author: "Brian Kernighan"
-  },
-  {
-    quote: "There is nothing quite so permanent as a quick fix.",
-    author: "Anonymous"
-  },
-  {
-    quote: "The best code is no code at all.",
-    author: "Jeff Atwood"
-  },
-  {
-    quote: "In theory, theory and practice are the same. In practice, they’re not.",
-    author: "Yogi Berra"
-  },
-  {
-    quote: "Without requirements or design, programming is the art of adding bugs to an empty text file.",
-    author: "Louis Srygley"
-  },
-  {
-    quote: "Computers are fast; programmers keep them slow.",
-    author: "Anonymous"
-  },
-  {
-    quote: "A language that doesn’t affect the way you think about programming is not worth knowing.",
-    author: "Alan Perlis"
-  },
-  {
-    quote: "Testing can show the presence of bugs, but not their absence.",
-    author: "Edsger W. Dijkstra"
-  },
-  {
-    quote: "Weeks of programming can save you hours of planning.",
-    author: "Anonymous"
-  },
-  {
-    quote: "The trouble with programmers is that you can never tell what a programmer is doing until it’s too late.",
-    author: "Seymour Cray"
-  },
-  {
-    quote: "Nine people can’t make a baby in a month.",
-    author: "Fred Brooks"
-  },
-  {
-    quote: "The best performance improvement is the transition from the nonworking state to the working state.",
-    author: "John Ousterhout"
-  },
-  {
-    quote: "A good programmer is someone who always looks both ways before crossing a one-way street.",
-    author: "Doug Linder"
-  },
-  {
-    quote: "Programs are meant to be read by humans and only incidentally for computers to execute.",
-    author: "Donald Knuth"
-  },
-  {
-    quote: "Without data structures, you can’t do much programming.",
-    author: "Robert Floyd"
-  },
-  {
-    quote: "Java is to JavaScript what car is to carpet.",
-    author: "Chris Heilmann"
-  },
-  {
-    quote: "It always takes longer than you expect, even when you take into account Hofstadter’s Law.",
-    author: "Douglas Hofstadter"
-  }
-];
-
-function showRandomQuote() {
-  const devQuoteP = document.getElementById("dev-quote");
-  const random = devQuotes[Math.floor(Math.random() * devQuotes.length)];
-  devQuoteP.innerHTML = `"${random.quote}" <b> — ${random.author}</b>`;
-}
-
-// Run once on load
-showRandomQuote();
-
-// Project Details Toggle Function
-function toggleProjectDetails(detailsId, button) {
-  const detailsElement = document.getElementById(detailsId);
-  const isHidden = detailsElement.classList.contains('hidden');
-
-  if (isHidden) {
-    // Show details
-    detailsElement.classList.remove('hidden');
-    button.innerHTML = 'View Less';
-    button.classList.add('expanded');
-  } else {
-    // Hide details
-    detailsElement.classList.add('hidden');
-    button.innerHTML = 'View More';
-    button.classList.remove('expanded');
-  }
-}
-
-
-// 💖 Theme Toggle & Love Mode
-const btn = document.getElementById("themeToggle"); // your 💖 button
-const emojis = ["💗", "💖", "💞", "💓", "💘"];
-let loveInterval;
-let modalShown = false; // only show modal once per session
-
-// Modal elements
-const loveModal = document.getElementById("loveModal");
-const closeModal = document.getElementById("closeModal");
-const modalOkay = document.getElementById("modalOkay");
-
-// Spawn a single emoji
-function spawnLoveEmoji() {
-  const emoji = document.createElement("div");
-  emoji.classList.add("love-emoji");
-  emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-
-  // random position anywhere on screen
-  emoji.style.left = Math.random() * window.innerWidth + "px";
-  emoji.style.top = Math.random() * window.innerHeight + "px";
-  emoji.style.fontSize = (Math.random() * 1.5 + 1.5) + "rem"; // random size
-
-  document.body.appendChild(emoji);
-
-  // cleanup
-  setTimeout(() => emoji.remove(), 4000);
-}
-
-// Start spamming emojis
-function startLoveSpam() {
-  if (!loveInterval) {
-    loveInterval = setInterval(spawnLoveEmoji, 250); // adjust for density
-  }
-}
-
-// Stop spamming
-function stopLoveSpam() {
-  clearInterval(loveInterval);
-  loveInterval = null;
-}
-
-// Toggle theme
-btn.addEventListener("click", () => {
-  document.body.classList.toggle("love-theme");
-
-  if (document.body.classList.contains("love-theme")) {
-    startLoveSpam();
-
-    // Show modal only the first time
-    if (!modalShown) {
-      loveModal.classList.remove("hidden");
-      modalShown = true;
-    }
-  } else {
-    stopLoveSpam();
-    loveModal.classList.add("hidden"); // ensure modal is hidden when turning off
-  }
-});
-
-// Modal buttons
-closeModal.addEventListener("click", () => {
-  loveModal.classList.add("hidden");
-});
-
-modalOkay.addEventListener("click", () => {
-  loveModal.classList.add("hidden");
-});
-
-// Hacker glyphs pool
-const hackerGlyphs = ["0", "1", "$", ">", "#", "%", "&"];
-let hackerInterval = null;
-
-document.querySelectorAll(".tech-item").forEach(item => {
-  item.addEventListener("click", () => {
-    // Remove love-theme if present
-    document.body.classList.remove("love-theme");
-    // Toggle hacker-theme
-    const isNow = document.body.classList.toggle("hacker-theme");
-
-    // If hacker-theme now active => start continuous glyphs + indicator
-    if (isNow) {
-      startGlyphs();
-      showHackerModal(); // optional
-    } else {
-      stopGlyphs();
-    }
-  });
-});
-
-function createHackerGlyph() {
-  const glyph = document.createElement("div");
-  glyph.classList.add("hacker-emoji");
-  glyph.textContent = hackerGlyphs[Math.floor(Math.random() * hackerGlyphs.length)];
-
-  glyph.style.left = Math.random() * window.innerWidth + "px";
-  glyph.style.top = Math.random() * window.innerHeight + "px";
-
-  document.body.appendChild(glyph);
-
-  // Remove after animation end
-  setTimeout(() => glyph.remove(), 5000);
-}
-
-function startGlyphs() {
-  if (!hackerInterval) {
-    hackerInterval = setInterval(createHackerGlyph, 400); // spawn every 400ms
-  }
-}
-
-function stopGlyphs() {
-  clearInterval(hackerInterval);
-  hackerInterval = null;
-}
-
-function showHackerModal() {
-  const modal = document.createElement("div");
-  modal.className = "hacker-modal fixed inset-0 flex items-center justify-center bg-black/80";
-  modal.innerHTML = `
-    <div class="p-6 bg-black border-2 border-green-400 rounded-xl shadow-lg text-green-400 max-w-sm animate-pulse">
-      <h2 class="text-xl font-bold mb-2">Hacker Mode Activated</h2>
-      <p class="text-sm">You're inside the Matrix now...</p>
-    </div>
-  `;
-  document.body.appendChild(modal);
-  setTimeout(() => modal.remove(), 3000);
-}
-
-// 🌙 Dark/Light Mode Toggle
-const themeSwitch = document.getElementById("themeSwitch");
-if (themeSwitch) {
-  // Check for saved preference
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "light") {
-    document.body.classList.add("light-theme");
-    themeSwitch.innerHTML = "<i class='bi bi-sun-fill'></i>";
-  }
-
-  themeSwitch.addEventListener("click", () => {
-    document.body.classList.toggle("light-theme");
-    const isLight = document.body.classList.contains("light-theme");
-    themeSwitch.innerHTML = isLight ? "<i class='bi bi-sun-fill'></i>" : "<i class='bi bi-moon-stars-fill'></i>";
-    localStorage.setItem("theme", isLight ? "light" : "dark");
-  });
-}
