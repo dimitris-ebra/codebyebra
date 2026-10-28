@@ -36,7 +36,7 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
    <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@1,300;1,400&display=swap" />
-   <link rel="stylesheet" href="style.css?v=10" />
+   <link rel="stylesheet" href="style.css?v=11" />
 
    <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)" />
    <meta name="theme-color" content="#0c0c0b" media="(prefers-color-scheme: dark)" />
@@ -235,38 +235,17 @@
          </header>
 
          <article class="case">
-            <!-- Device showcase: desktop walkthrough video + mobile screenshot -->
+            <!-- Project presentation video, hosted on Streamable -->
             <div class="showcase reveal" id="showcase">
                <div class="showcase-bar">
                   <span>elmylonas.gr</span>
-                  <span data-i18n="work.showcaseNote">Recorded walkthrough &middot; Desktop &amp; mobile</span>
+                  <span data-i18n="work.showcaseNote">Project presentation</span>
                </div>
 
-               <div class="devices">
-                  <button type="button" class="laptop" data-open-video
-                     aria-label="Play the full walkthrough of elmylonas.gr" data-i18n-attr="aria-label:work.playLabel">
-                     <span class="laptop-lid">
-                        <span class="laptop-screen">
-                           <video class="laptop-video" muted loop playsinline preload="none"
-                              poster="assets/elmylonas-portfolio-1080p60.mp4" aria-hidden="true">
-                              <source src="assets/elmylonas-portfolio-1080p60.mp4" type="video/mp4" />
-                           </video>
-                           <span class="play-hint">
-                              <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
-                                 <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
-                              </svg>
-                              <span data-i18n="work.playHint">Watch the full walkthrough</span>
-                           </span>
-                        </span>
-                     </span>
-                     <span class="laptop-base" aria-hidden="true"></span>
-                  </button>
-
-                  <div class="phone-wrap">
-                     <img class="phone" src="assets/elmylonas-mobile.webp" width="628" height="1278" loading="lazy"
-                        decoding="async" data-i18n-attr="alt:work.phoneAlt"
-                        alt="elmylonas.gr on a phone, showing the profile page with the teacher’s photo and introduction" />
-                  </div>
+               <div class="showcase-video">
+                  <iframe src="https://streamable.com/e/vne5vy" title="elmylonas.gr presentation video"
+                     data-i18n-attr="title:work.videoTitle" allow="fullscreen" allowfullscreen
+                     loading="lazy"></iframe>
                </div>
 
                <ul class="showcase-modules" aria-label="Platform features" data-i18n-attr="aria-label:work.modulesLabel">
@@ -293,12 +272,6 @@
                      publish announcements without touching code &mdash; turning a static portfolio into a living
                      resource that grows with the educator&rsquo;s work.
                   </p>
-                  <button type="button" class="link-arrow" data-open-video>
-                     <span data-i18n="work.watch">Watch the walkthrough</span>
-                     <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
-                        <path d="M4.5 2.8v10.4L13 8 4.5 2.8Z" fill="currentColor" />
-                     </svg>
-                  </button>
                </div>
 
                <dl class="case-meta">
@@ -481,26 +454,8 @@
       <div class="container footer-mark split-chars" aria-hidden="true">codebyebra<span class="footer-mark-dot">.</span></div>
    </footer>
 
-   <!-- Walkthrough video lightbox -->
-   <dialog class="lightbox" id="videoDialog" aria-label="elmylonas.gr walkthrough video"
-      data-i18n-attr="aria-label:video.label">
-      <div class="lightbox-inner">
-         <video class="lightbox-video" controls playsinline preload="none"
-            poster="assets/elmylonas-walkthrough-poster.webp?v=2">
-            <source src="assets/elmylonas-walkthrough.mp4" type="video/mp4" />
-         </video>
-         <p class="lightbox-caption" data-i18n="video.caption">elmylonas.gr &mdash; desktop walkthrough</p>
-         <button type="button" class="icon-btn lightbox-close" data-close-video aria-label="Close video"
-            data-i18n-attr="aria-label:video.close">
-            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-               <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-            </svg>
-         </button>
-      </div>
-   </dialog>
-
-   <script src="translations.js?v=10" defer></script>
-   <script src="script.js?v=10" defer></script>
+   <script src="translations.js?v=11" defer></script>
+   <script src="script.js?v=11" defer></script>
    <script type="application/ld+json">
       {
          "@context": "https://schema.org",

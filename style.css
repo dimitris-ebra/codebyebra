@@ -543,32 +543,6 @@ main,
    pointer-events: none;
 }
 
-.link-arrow {
-   display: inline-flex;
-   align-items: center;
-   gap: 0.5rem;
-   padding: 0 0 3px;
-   border: 0;
-   background:
-      linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat,
-      linear-gradient(var(--line-strong), var(--line-strong)) 0 100% / 100% 1px no-repeat;
-   font-weight: 500;
-   transition: color 0.2s ease, background-size 0.5s var(--ease-out);
-}
-
-.link-arrow:hover {
-   color: var(--accent);
-   background-size: 100% 1px, 100% 1px;
-}
-
-.link-arrow svg {
-   transition: transform 0.35s var(--ease-out);
-}
-
-.link-arrow:hover svg {
-   transform: scale(1.2);
-}
-
 .text-btn {
    padding: 0;
    border: 0;
@@ -595,8 +569,7 @@ main,
 .stack dt,
 .showcase-bar,
 .principle-num,
-.field label,
-.lightbox-caption {
+.field label {
    font-family: var(--font-mono);
    font-size: 0.75rem;
    font-weight: 400;
@@ -980,161 +953,34 @@ main,
    border-bottom: 1px solid var(--line);
 }
 
-.devices {
-   --rx: 0deg;
-   --ry: 0deg;
+/* Streamable embed of the project presentation */
+.showcase-video {
    position: relative;
    width: min(100%, 1000px);
-   margin: clamp(2.5rem, 6vw, 4.5rem) auto clamp(3.5rem, 7vw, 5.5rem);
-   transform: perspective(1800px) rotateX(var(--rx)) rotateY(var(--ry));
-   transform-style: preserve-3d;
-   transition: transform 0.8s var(--ease-out);
-}
-
-/* Laptop drawn in CSS around the recorded screen */
-.laptop {
-   position: relative;
-   display: block;
-   width: 86%;
-   padding: 0;
-   border: 0;
-   background: none;
-   text-align: inherit;
-}
-
-.laptop::after {
-   content: "";
-   position: absolute;
-   left: 2%;
-   right: 2%;
-   bottom: -22px;
-   z-index: -1;
-   height: 40px;
-   background: radial-gradient(closest-side, var(--shadow-device), transparent);
-   filter: blur(8px);
-}
-
-.laptop-lid {
-   position: relative;
-   display: block;
-   padding: 1.7% 1.7% 2.6%;
-   border-radius: 18px 18px 4px 4px;
-   background: #0b0b0c;
-   box-shadow: inset 0 0 0 1px #2b2b2e, 0 0 0 1px #4a4a4f;
-}
-
-.laptop-lid::before {
-   content: "";
-   position: absolute;
-   top: 0.65%;
-   left: 50%;
-   width: 5px;
-   height: 5px;
-   border-radius: 50%;
-   background: #232327;
-   transform: translateX(-50%);
-}
-
-.laptop-screen {
-   position: relative;
-   display: block;
+   aspect-ratio: 16 / 9;
+   margin: clamp(2rem, 5vw, 3.5rem) auto;
    overflow: hidden;
-   aspect-ratio: 1264 / 790;
-   border-radius: 4px;
+   border-radius: 12px;
    background: #0b1520;
+   box-shadow: 0 0 0 1px var(--line-strong), 0 30px 60px -24px var(--shadow-device);
 }
 
-.laptop-video {
+.showcase-video iframe {
+   position: absolute;
+   inset: 0;
    width: 100%;
    height: 100%;
-   object-fit: cover;
-}
-
-.laptop-base {
-   position: relative;
-   display: block;
-   width: 114%;
-   height: clamp(10px, 1.7vw, 18px);
-   margin-left: -7%;
-   border-radius: 2px 2px 50% 50% / 2px 2px 100% 100%;
-   background: linear-gradient(to bottom, #e4e4e7 0%, #c4c4c9 40%, #8f8f96 100%);
-   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.laptop-base::before {
-   content: "";
-   position: absolute;
-   top: 0;
-   left: 50%;
-   width: 13%;
-   height: 42%;
-   border-radius: 0 0 8px 8px;
-   background: linear-gradient(to bottom, #9c9ca3, #c4c4c9);
-   transform: translateX(-50%);
-}
-
-.play-hint {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   display: inline-flex;
-   align-items: center;
-   gap: 0.55rem;
-   padding: 0.7rem 1.15rem;
-   border-radius: 999px;
-   background: rgba(12, 12, 11, 0.72);
-   -webkit-backdrop-filter: blur(10px);
-   backdrop-filter: blur(10px);
-   color: #fff;
-   font-size: 0.875rem;
-   font-weight: 500;
-   white-space: nowrap;
-   opacity: 0;
-   transform: translate(-50%, -50%) scale(0.9);
-   transition: opacity 0.35s ease, transform 0.5s var(--ease-out);
-   pointer-events: none;
-}
-
-.laptop:hover .play-hint,
-.laptop:focus-visible .play-hint {
-   opacity: 1;
-   transform: translate(-50%, -50%) scale(1);
-}
-
-.laptop:focus-visible {
-   outline-offset: 8px;
-}
-
-.phone-wrap {
-   position: absolute;
-   right: 1%;
-   bottom: -6%;
-   z-index: 2;
-   width: 22%;
-   transform: translate3d(0, var(--py, 0px), 60px);
-}
-
-.phone {
-   width: 100%;
-   height: auto;
-   filter: drop-shadow(0 28px 32px var(--shadow-device));
+   border: 0;
 }
 
 /* Showcase entrance */
-.js .showcase .laptop {
+.js .showcase .showcase-video {
    opacity: 0;
    transform: translateY(48px) scale(0.97);
    transition: opacity 1.2s var(--ease-out) 0.15s, transform 1.2s var(--ease-out) 0.15s;
 }
 
-.js .showcase .phone {
-   opacity: 0;
-   transform: translate(30px, 80px) rotate(5deg);
-   transition: opacity 1.2s var(--ease-out) 0.45s, transform 1.4s var(--ease-out) 0.45s;
-}
-
-.js .showcase.is-visible .laptop,
-.js .showcase.is-visible .phone {
+.js .showcase.is-visible .showcase-video {
    opacity: 1;
    transform: none;
 }
@@ -1190,15 +1036,6 @@ main,
    font-weight: 500;
    letter-spacing: -0.035em;
    color: var(--fg);
-}
-
-.case-intro .link-arrow {
-   margin-top: 0.5rem;
-   color: var(--fg);
-}
-
-.case-intro .link-arrow:hover {
-   color: var(--accent);
 }
 
 .case-meta {
@@ -1614,75 +1451,6 @@ main,
    transform: none;
 }
 
-/* ===== Video lightbox ===== */
-.lightbox {
-   width: min(1100px, calc(100vw - 2rem));
-   max-width: none;
-   max-height: none;
-   padding: 0;
-   overflow: visible;
-   border: 0;
-   background: transparent;
-   color: #fff;
-}
-
-.lightbox::backdrop {
-   background: rgba(8, 8, 7, 0.86);
-   -webkit-backdrop-filter: blur(8px);
-   backdrop-filter: blur(8px);
-}
-
-.lightbox[open] {
-   animation: lightbox-in 0.6s var(--ease-out);
-}
-
-.lightbox[open]::backdrop {
-   animation: fade-in 0.4s ease;
-}
-
-.lightbox-inner {
-   position: relative;
-}
-
-.lightbox-video {
-   width: 100%;
-   aspect-ratio: 1264 / 790;
-   border-radius: 12px;
-   background: #000;
-   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-}
-
-.lightbox-caption {
-   margin-top: 0.875rem;
-   color: rgba(255, 255, 255, 0.6);
-}
-
-.lightbox-close {
-   position: absolute;
-   top: -52px;
-   right: 0;
-   border-color: rgba(255, 255, 255, 0.25);
-   color: #fff;
-}
-
-.lightbox-close:hover {
-   border-color: #fff;
-   color: #fff;
-}
-
-@keyframes lightbox-in {
-   from {
-      opacity: 0;
-      transform: translateY(24px) scale(0.96);
-   }
-}
-
-@keyframes fade-in {
-   from {
-      opacity: 0;
-   }
-}
-
 /* ===== Scroll reveal ===== */
 .js .reveal {
    opacity: 0;
@@ -1878,21 +1646,9 @@ main,
       display: none;
    }
 
-   .devices {
-      margin-block: 2rem 2.5rem;
-   }
-
-   .laptop {
-      width: 90%;
-   }
-
-   .laptop-lid {
-      border-radius: 10px 10px 3px 3px;
-   }
-
-   .phone-wrap {
-      right: 0;
-      width: 27%;
+   .showcase-video {
+      margin-block: 1.5rem;
+      border-radius: 8px;
    }
 
    .showcase-modules li:nth-child(n + 4) {
@@ -1914,31 +1670,9 @@ main,
    .btn {
       flex: 1 1 auto;
    }
-
-   .lightbox-close {
-      top: -48px;
-   }
 }
 
-/* Touch and small screens: keep a compact play hint visible in the corner clear of the phone */
-@media (hover: none), (max-width: 720px) {
-   .play-hint {
-      top: auto;
-      left: 3%;
-      bottom: 5%;
-      padding: 0.4rem 0.7rem;
-      font-size: 0.6875rem;
-      opacity: 1;
-      transform: none;
-   }
-
-   .laptop:hover .play-hint,
-   .laptop:focus-visible .play-hint {
-      transform: none;
-   }
-}
-
-/* Reduced motion: keep gentle fades, drop movement, blur, tilt and parallax */
+/* Reduced motion: keep gentle fades, drop movement and blur */
 @media (prefers-reduced-motion: reduce) {
    html {
       scroll-behavior: auto;
@@ -1956,8 +1690,7 @@ main,
    .js .split .w,
    .js .footer-mark .c,
    .js .section-label,
-   .js .showcase .laptop,
-   .js .showcase .phone,
+   .js .showcase .showcase-video,
    .js .showcase-modules li,
    .js .hero .eyebrow,
    .js .hero-lead,
@@ -1965,16 +1698,9 @@ main,
    .js .hero-meta > div,
    .js .section-head::before,
    .js .hero .eyebrow::before,
-   .devices,
-   .phone-wrap,
    .btn,
    .stack-row:hover dd span {
       transform: none !important;
       filter: none !important;
-   }
-
-   /* The walkthrough doesn't autoplay, so always show how to start it */
-   .play-hint {
-      opacity: 1;
    }
 }

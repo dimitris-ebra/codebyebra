@@ -222,10 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("main section[id]").forEach((section) => spy.observe(section));
   }
 
-  // --- Scroll-linked effects (header, progress bar, parallax, testimonial) ---
+  // --- Scroll-linked effects (header, progress bar, testimonial) ---
   const header = document.querySelector(".site-header");
-  const showcase = document.getElementById("showcase");
-  const phoneWrap = document.querySelector(".phone-wrap");
   const quote = document.querySelector(".testimonial blockquote");
   let ticking = false;
 
@@ -249,15 +247,6 @@ document.addEventListener("DOMContentLoaded", () => {
     header.style.setProperty("--progress", max > 0 ? (scrollY / max).toFixed(4) : 0);
 
     updateQuote();
-    if (reducedMotion) return;
-
-    const rect = showcase.getBoundingClientRect();
-    const vh = window.innerHeight;
-    if (rect.bottom > 0 && rect.top < vh) {
-      // -1 (showcase centred above viewport) … 1 (below); the phone drifts against the scroll
-      const offset = (rect.top + rect.height / 2 - vh / 2) / vh;
-      phoneWrap.style.setProperty("--py", `${(offset * 70).toFixed(1)}px`);
-    }
   }
 
   function requestScrollUpdate() {
@@ -286,20 +275,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (finePointer && !reducedMotion) {
 
-    // Showcase: devices tilt toward the cursor, glow follows it
-    const devices = showcase.querySelector(".devices");
+    // Showcase: the accent glow follows the cursor
+    const showcase = document.getElementById("showcase");
     showcase.addEventListener("pointermove", (e) => {
       const r = showcase.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      devices.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
-      devices.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
       showcase.style.setProperty("--mx", `${e.clientX - r.left}px`);
       showcase.style.setProperty("--my", `${e.clientY - r.top}px`);
-    });
-    showcase.addEventListener("pointerleave", () => {
-      devices.style.setProperty("--ry", "0deg");
-      devices.style.setProperty("--rx", "0deg");
     });
 
     // Buttons lean toward the cursor
@@ -315,50 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
-  // --- Walkthrough Video ---
-  const inlineVideo = document.querySelector(".laptop-video");
-  const videoDialog = document.getElementById("videoDialog");
-  const dialogVideo = videoDialog.querySelector("video");
-  let inlineInView = false;
-
-  function playInline() {
-    if (reducedMotion || videoDialog.open) return;
-    const attempt = inlineVideo.play();
-    if (attempt) attempt.catch(() => {});
-  }
-
-  // Only play (and download) the inline loop while it is on screen
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(
-      ([entry]) => {
-        inlineInView = entry.isIntersecting;
-        if (inlineInView) playInline();
-        else inlineVideo.pause();
-      },
-      { threshold: 0.35 }
-    ).observe(inlineVideo);
-  }
-
-  document.querySelectorAll("[data-open-video]").forEach((trigger) => {
-    trigger.addEventListener("click", () => {
-      inlineVideo.pause();
-      if (inlineVideo.currentTime > 0) dialogVideo.currentTime = inlineVideo.currentTime;
-      videoDialog.showModal();
-      const attempt = dialogVideo.play();
-      if (attempt) attempt.catch(() => {});
-    });
-  });
-
-  videoDialog.querySelector("[data-close-video]").addEventListener("click", () => videoDialog.close());
-  // Clicking the dimmed backdrop closes the dialog
-  videoDialog.addEventListener("click", (e) => {
-    if (e.target === videoDialog) videoDialog.close();
-  });
-  videoDialog.addEventListener("close", () => {
-    dialogVideo.pause();
-    if (inlineInView) playInline();
-  });
 
   // --- Local Time (Greece) ---
   const timeEls = document.querySelectorAll("[data-local-time]");
