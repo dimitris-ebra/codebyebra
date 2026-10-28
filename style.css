@@ -17,6 +17,7 @@
    --ok: #15803d;
    --busy: #b45309;
    --shadow-device: rgba(30, 25, 15, 0.22);
+   --scrollbar-thumb: #c9c6ba;
 
    --font-sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -48,6 +49,7 @@
       --ok: #4ade80;
       --busy: #fbbf24;
       --shadow-device: rgba(0, 0, 0, 0.6);
+      --scrollbar-thumb: #3b3b36;
       color-scheme: dark;
    }
 }
@@ -66,6 +68,7 @@
    --ok: #4ade80;
    --busy: #fbbf24;
    --shadow-device: rgba(0, 0, 0, 0.6);
+   --scrollbar-thumb: #3b3b36;
    color-scheme: dark;
 }
 
@@ -156,6 +159,61 @@ strong {
    outline: 2px solid var(--accent);
    outline-offset: 3px;
    border-radius: 4px;
+}
+
+/* Sections that take focus after an in-page jump don't need a ring around them */
+[tabindex="-1"]:focus {
+   outline: none;
+}
+
+/* ===== Scrollbar ===== */
+/* Firefox: thin native scrollbar in the theme colours */
+@supports not selector(::-webkit-scrollbar) {
+   html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--bg);
+   }
+}
+
+/* Chromium and Safari: slim rounded thumb that darkens on hover, accent while dragged */
+::-webkit-scrollbar {
+   width: 12px;
+   height: 12px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+   background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+   min-height: 48px;
+   border: 3px solid transparent;
+   border-radius: 999px;
+   background: var(--scrollbar-thumb) padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+   background-color: var(--fg-subtle);
+}
+
+::-webkit-scrollbar-thumb:active {
+   background-color: var(--accent);
+}
+
+/* ===== Smooth scrolling (Lenis) ===== */
+html.lenis,
+html.lenis body {
+   height: auto;
+}
+
+.lenis.lenis-stopped {
+   overflow: clip;
+}
+
+/* Embeds would swallow the wheel mid-glide; let it pass through while scrolling */
+.lenis.lenis-smooth iframe {
+   pointer-events: none;
 }
 
 .container {
@@ -929,7 +987,27 @@ main,
    color: var(--fg-muted);
 }
 
-/* ===== Case study: device showcase ===== */
+/* ===== Case studies ===== */
+/* Each <article class="case"> numbers itself (01, 02, …) in page order */
+.work {
+   counter-reset: case;
+}
+
+.case {
+   counter-increment: case;
+}
+
+.case + .case {
+   margin-top: clamp(6rem, 12vw, 10rem);
+}
+
+.case-num::before {
+   content: counter(case, decimal-leading-zero);
+   margin-right: 0.75rem;
+   color: var(--accent);
+}
+
+/* ===== Case study: showcase ===== */
 .showcase {
    --mx: 70%;
    --my: 20%;
@@ -953,34 +1031,39 @@ main,
    border-bottom: 1px solid var(--line);
 }
 
-/* Streamable embed of the project presentation */
-.showcase-video {
+/* Project media: an embed (Streamable, YouTube…), an image or a video.
+   Set --ratio for non-16:9 media and --media-bg for the colour shown while it loads. */
+.showcase-media {
    position: relative;
    width: min(100%, 1000px);
-   aspect-ratio: 16 / 9;
+   aspect-ratio: var(--ratio, 16 / 9);
    margin: clamp(2rem, 5vw, 3.5rem) auto;
    overflow: hidden;
    border-radius: 12px;
-   background: #0b1520;
+   background: var(--media-bg, var(--bg));
    box-shadow: 0 0 0 1px var(--line-strong), 0 30px 60px -24px var(--shadow-device);
 }
 
-.showcase-video iframe {
+.showcase-media > iframe,
+.showcase-media > img,
+.showcase-media > video {
    position: absolute;
    inset: 0;
    width: 100%;
    height: 100%;
    border: 0;
+   object-fit: cover;
+   object-position: top;
 }
 
 /* Showcase entrance */
-.js .showcase .showcase-video {
+.js .showcase .showcase-media {
    opacity: 0;
    transform: translateY(48px) scale(0.97);
    transition: opacity 1.2s var(--ease-out) 0.15s, transform 1.2s var(--ease-out) 0.15s;
 }
 
-.js .showcase.is-visible .showcase-video {
+.js .showcase.is-visible .showcase-media {
    opacity: 1;
    transform: none;
 }
@@ -1056,6 +1139,24 @@ main,
 
 .case-meta dd {
    font-size: 0.9375rem;
+}
+
+.case-links {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.25rem 1.25rem;
+}
+
+.case-links a {
+   text-decoration: underline;
+   text-decoration-color: var(--line-strong);
+   text-underline-offset: 4px;
+   transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.case-links a:hover {
+   color: var(--accent);
+   text-decoration-color: currentColor;
 }
 
 /* Testimonial — words light up as it scrolls through the viewport */
@@ -1646,7 +1747,7 @@ main,
       display: none;
    }
 
-   .showcase-video {
+   .showcase-media {
       margin-block: 1.5rem;
       border-radius: 8px;
    }
@@ -1690,7 +1791,7 @@ main,
    .js .split .w,
    .js .footer-mark .c,
    .js .section-label,
-   .js .showcase .showcase-video,
+   .js .showcase .showcase-media,
    .js .showcase-modules li,
    .js .hero .eyebrow,
    .js .hero-lead,

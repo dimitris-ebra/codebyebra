@@ -5,6 +5,9 @@
 // "en" below only holds strings that script.js shows on its own (status,
 // form messages, menu labels). "el" holds the Greek version of everything.
 // Values may contain inline HTML such as <em>, <strong> and &nbsp;.
+//
+// Each case study has its own "case.<slug>.*" keys; the "work.*" labels are
+// shared, so a new project only needs its own text translated (see README.md).
 
 window.TRANSLATIONS = {
   en: {
@@ -15,7 +18,7 @@ window.TRANSLATIONS = {
     "status.unavailable": "Not taking new projects",
     "status.unknown": "Availability unknown",
     "quote.showTranslation": "Show English translation",
-    "quote.showOriginal": "Show original (Greek)",
+    "quote.showOriginal": "Show original",
     "form.sending": "Sending…",
     "form.success": "Thanks — your message is on its way. I'll reply by email.",
     "form.error": "Something went wrong. Please try again, or reach me on LinkedIn.",
@@ -75,38 +78,45 @@ window.TRANSLATIONS = {
     "about.p3.text":
       "Αναλαμβάνω τη φιλοξενία και τη δημοσίευση, και κρατώ τα συστήματα σταθερά με προσεκτικές ενημερώσεις, χωρίς απώλεια δεδομένων.",
 
-    // Selected work
+    // Selected work: labels shared by every case study
     "work.label": "Επιλεγμένα έργα",
     "work.title": "Πραγματικός πελάτης, πραγματικό έργο, <em>παραδομένο.</em>",
-    "work.showcaseNote": "Παρουσίαση έργου",
-    "work.videoTitle": "Βίντεο παρουσίασης του elmylonas.gr",
-    "work.modulesLabel": "Λειτουργίες της πλατφόρμας",
-    "work.module.public": "Δημόσιος ιστότοπος",
-    "work.module.admin": "Πίνακας διαχείρισης",
-    "work.module.resources": "Εκπαιδευτικό υλικό",
-    "work.module.exams": "Θέματα εξετάσεων",
-    "work.module.quizzes": "Κουίζ",
-    "work.module.announcements": "Ανακοινώσεις",
-    "work.kicker": "Freelance &middot; Πρώτο έργο για πελάτη",
-    "work.intro1":
-      "Ο επίσημος ψηφιακός χώρος του Λευτέρη Μυλωνά, οικονομολόγου και καθηγητή στη δευτεροβάθμια εκπαίδευση. Τον δημιούργησα ως ολοκληρωμένη επαγγελματική παρουσία: δημόσιο ιστότοπο για μαθητές και γονείς, με ασφαλή πίνακα διαχείρισης για το περιεχόμενο.",
-    "work.intro2":
-      "Ο διαχειριστής μπορεί να συνδεθεί, να ανεβάσει και να ενημερώσει εκπαιδευτικό υλικό, να διαχειριστεί θέματα εξετάσεων και να δημοσιεύσει ανακοινώσεις χωρίς να αγγίξει κώδικα &mdash; κάνοντας ένα στατικό portfolio ζωντανό εργαλείο που εξελίσσεται μαζί με τη δουλειά του εκπαιδευτικού.",
+    "work.features": "Βασικές λειτουργίες",
     "work.meta.client": "Πελάτης",
     "work.meta.role": "Ρόλος",
-    "work.meta.roleValue": "Σχεδιασμός, ανάπτυξη, φιλοξενία &amp; συντήρηση",
     "work.meta.stack": "Τεχνολογίες",
     "work.meta.status": "Κατάσταση",
-    "work.meta.statusValue": "Υπό συντήρηση",
-    "work.quoteRole": "Οικονομολόγος εκπαιδευτικός",
+    "work.meta.links": "Σύνδεσμοι",
+    "work.visit": "Επίσκεψη ιστότοπου",
+    "work.source": "Πηγαίος κώδικας",
     "work.more": "Διαβάστε περισσότερα για το έργο",
-    "work.platform.title": "Η πλατφόρμα",
-    "work.platform.text":
+    "quote.showTranslation": "Εμφάνιση ελληνικής μετάφρασης",
+    "quote.showOriginal": "Εμφάνιση πρωτοτύπου",
+
+    // Case: elmylonas.gr
+    "case.elmylonas.note": "Παρουσίαση έργου",
+    "case.elmylonas.videoTitle": "Βίντεο παρουσίασης του elmylonas.gr",
+    "case.elmylonas.module.public": "Δημόσιος ιστότοπος",
+    "case.elmylonas.module.admin": "Πίνακας διαχείρισης",
+    "case.elmylonas.module.resources": "Εκπαιδευτικό υλικό",
+    "case.elmylonas.module.exams": "Θέματα εξετάσεων",
+    "case.elmylonas.module.quizzes": "Κουίζ",
+    "case.elmylonas.module.announcements": "Ανακοινώσεις",
+    "case.elmylonas.kicker": "Freelance &middot; Πρώτο έργο για πελάτη",
+    "case.elmylonas.intro1":
+      "Ο επίσημος ψηφιακός χώρος του Λευτέρη Μυλωνά, οικονομολόγου και καθηγητή στη δευτεροβάθμια εκπαίδευση. Τον δημιούργησα ως ολοκληρωμένη επαγγελματική παρουσία: δημόσιο ιστότοπο για μαθητές και γονείς, με ασφαλή πίνακα διαχείρισης για το περιεχόμενο.",
+    "case.elmylonas.intro2":
+      "Ο διαχειριστής μπορεί να συνδεθεί, να ανεβάσει και να ενημερώσει εκπαιδευτικό υλικό, να διαχειριστεί θέματα εξετάσεων και να δημοσιεύσει ανακοινώσεις χωρίς να αγγίξει κώδικα &mdash; κάνοντας ένα στατικό portfolio ζωντανό εργαλείο που εξελίσσεται μαζί με τη δουλειά του εκπαιδευτικού.",
+    "case.elmylonas.role": "Σχεδιασμός, ανάπτυξη, φιλοξενία &amp; συντήρηση",
+    "case.elmylonas.status": "Υπό συντήρηση",
+    "case.elmylonas.quoteRole": "Οικονομολόγος εκπαιδευτικός",
+    "case.elmylonas.platform.title": "Η πλατφόρμα",
+    "case.elmylonas.platform.text":
       "Οι επισκέπτες μπορούν να δουν το ακαδημαϊκό υπόβαθρο του εκπαιδευτικού, να κατεβάσουν εκπαιδευτικό υλικό και να βρουν πληροφορίες για ιδιαίτερα μαθήματα, σε έναν σχεδιασμό που δίνει προτεραιότητα στη σαφήνεια, την εμπιστοσύνη και την προσβασιμότητα. Ενσωματωμένοι τρόποι επικοινωνίας (email, τηλέφωνο, social media) και υποστήριξη τηλεκπαίδευσης μέσω Zoom κάνουν την επικοινωνία με τους μαθητές απλή.",
-    "work.learned.title": "Τι έμαθα",
-    "work.learned.text1":
+    "case.elmylonas.learned.title": "Τι έμαθα",
+    "case.elmylonas.learned.text1":
       "Η πρώτη μου ευκαιρία ως freelancer ήρθε από τον καθηγητή μου στα οικονομικά, που μου εμπιστεύτηκε τη δημιουργία και τη συντήρηση μιας web εφαρμογής για τις ανάγκες του. Αυτό σήμαινε να δουλέψω ταυτόχρονα ως developer και ως πάροχος υπηρεσιών: επικοινωνία με τον πελάτη, καταγραφή απαιτήσεων, τήρηση προθεσμιών και αναθεωρήσεις, χωρίς να χάνω τη συνολική εικόνα.",
-    "work.learned.text2":
+    "case.elmylonas.learned.text2":
       "Σε τεχνικό επίπεδο, συνδύασα Python (Flask) και JavaScript σε μια responsive full-stack εφαρμογή, υλοποίησα ασφαλή έλεγχο ταυτότητας και την προστάτευσα από συνηθισμένες ευπάθειες όπως XSS και SQL injection. Έμαθα να διαχειρίζομαι προσεκτικά τη βάση δεδομένων σε μεγάλες αναβαθμίσεις, ώστε να μη χαθούν ποτέ δεδομένα, και ανέλαβα τη φιλοξενία, τη δημοσίευση και την παρακολούθηση της εφαρμογής σε παραγωγή &mdash; όπου τη διατηρώ σταθερή μέχρι σήμερα.",
 
     // Stack

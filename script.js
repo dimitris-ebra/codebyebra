@@ -131,6 +131,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.matches) setMenu(false);
   });
 
+  // --- Smooth Scrolling (Lenis) ---
+  // Eases mouse-wheel scrolling. Touch, keyboard and reduced-motion visitors
+  // keep the browser's own scrolling, and the page still works if the CDN fails.
+  const lenis = !reducedMotion && window.Lenis ? new window.Lenis({ autoRaf: true }) : null;
+
+  // In-page links glide to their target; scroll-padding-top keeps it clear of
+  // the sticky header. Without Lenis the browser's own anchor jump does this.
+  if (lenis) {
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const id = link.getAttribute("href").slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(id === "top" ? 0 : target);
+        history.pushState(null, "", `#${id}`);
+
+        // Keyboard activation: carry focus to where the reader landed, as a
+        // normal anchor jump would, so the next Tab continues from there
+        if (e.detail === 0) {
+          if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+          target.focus({ preventScroll: true });
+        }
+      });
+    });
+  }
+
   // --- Split Text (word / character reveals) ---
   // Wraps each word (or character) of an element's text in a span with an
   // index, keeping nested elements like <em> intact. Non-breaking spaces stay
@@ -222,20 +249,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("main section[id]").forEach((section) => spy.observe(section));
   }
 
-  // --- Scroll-linked effects (header, progress bar, testimonial) ---
+  // --- Scroll-linked effects (header, progress bar, testimonials) ---
   const header = document.querySelector(".site-header");
-  const quote = document.querySelector(".testimonial blockquote");
+  const quotes = document.querySelectorAll(".testimonial blockquote");
   let ticking = false;
 
-  function updateQuote() {
-    const visible = quote.querySelector("p:not([hidden])");
-    const words = visible.querySelectorAll(".tw");
-    const rect = quote.getBoundingClientRect();
+  function updateQuotes() {
     const vh = window.innerHeight;
-    // 0 when the quote's top reaches 85% of the viewport, 1 when its bottom reaches 50%
-    const progress = Math.min(Math.max((vh * 0.85 - rect.top) / (vh * 0.35 + rect.height), 0), 1);
-    const lit = Math.round(progress * words.length);
-    words.forEach((word, i) => word.classList.toggle("is-lit", i < lit));
+    quotes.forEach((quote) => {
+      const words = quote.querySelectorAll("p:not([hidden]) .tw");
+      const rect = quote.getBoundingClientRect();
+      // 0 when the quote's top reaches 85% of the viewport, 1 when its bottom reaches 50%
+      const progress = Math.min(Math.max((vh * 0.85 - rect.top) / (vh * 0.35 + rect.height), 0), 1);
+      const lit = Math.round(progress * words.length);
+      words.forEach((word, i) => word.classList.toggle("is-lit", i < lit));
+    });
   }
 
   function onScroll() {
@@ -246,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
     header.classList.toggle("is-scrolled", scrollY > 8);
     header.style.setProperty("--progress", max > 0 ? (scrollY / max).toFixed(4) : 0);
 
-    updateQuote();
+    updateQuotes();
   }
 
   function requestScrollUpdate() {
@@ -275,12 +303,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (finePointer && !reducedMotion) {
 
-    // Showcase: the accent glow follows the cursor
-    const showcase = document.getElementById("showcase");
-    showcase.addEventListener("pointermove", (e) => {
-      const r = showcase.getBoundingClientRect();
-      showcase.style.setProperty("--mx", `${e.clientX - r.left}px`);
-      showcase.style.setProperty("--my", `${e.clientY - r.top}px`);
+    // Case showcases: the accent glow follows the cursor
+    document.querySelectorAll(".showcase").forEach((showcase) => {
+      showcase.addEventListener("pointermove", (e) => {
+        const r = showcase.getBoundingClientRect();
+        showcase.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        showcase.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
     });
 
     // Buttons lean toward the cursor
@@ -313,29 +342,41 @@ document.addEventListener("DOMContentLoaded", () => {
   updateTime();
   setInterval(updateTime, 30000);
 
-  // --- Testimonial Translation ---
-  const translateToggle = document.getElementById("translateToggle");
-  const quoteEl = document.querySelector('[data-quote="el"]');
-  const quoteEn = document.querySelector('[data-quote="en"]');
+  // --- Testimonial Translations ---
+  // Each quote shows its original wording. When that isn't the page language
+  // and a translation is provided, a button swaps between the two.
+  const testimonials = [...document.querySelectorAll(".testimonial")].map((figure) => ({
+    original: figure.querySelector('[data-quote="original"]'),
+    translation: figure.querySelector('[data-quote="translation"]'),
+    toggle: figure.querySelector("[data-quote-toggle]"),
+  }));
 
-  function showQuote(english) {
-    quoteEn.hidden = !english;
-    quoteEl.hidden = english;
-    translateToggle.setAttribute("aria-pressed", String(english));
-    translateToggle.textContent = t(english ? "quote.showOriginal" : "quote.showTranslation");
-    updateQuote();
+  function showQuote(item, translated) {
+    item.original.hidden = translated;
+    if (item.translation) item.translation.hidden = !translated;
+    if (item.toggle) {
+      item.toggle.setAttribute("aria-pressed", String(translated));
+      item.toggle.textContent = t(translated ? "quote.showOriginal" : "quote.showTranslation");
+    }
   }
 
-  translateToggle.addEventListener("click", () => showQuote(quoteEn.hidden));
-
-  // The quote is already in Greek, so the Greek site needs no translation button
-  function syncQuoteToLanguage() {
-    translateToggle.hidden = lang === "el";
-    showQuote(false);
+  function syncQuotesToLanguage() {
+    testimonials.forEach((item) => {
+      if (item.toggle) item.toggle.hidden = !item.translation || item.original.lang === lang;
+      showQuote(item, false);
+    });
+    updateQuotes();
   }
 
-  syncQuoteToLanguage();
-  languageListeners.push(syncQuoteToLanguage);
+  testimonials.forEach((item) => {
+    item.toggle?.addEventListener("click", () => {
+      showQuote(item, item.translation.hidden);
+      updateQuotes();
+    });
+  });
+
+  syncQuotesToLanguage();
+  languageListeners.push(syncQuotesToLanguage);
 
   // --- Contact Form (Formspree) ---
   const form = document.getElementById("contactForm");
